@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter
 
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -7,6 +8,7 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(TagService)
+@Mock([Tag])
 class TagServiceSpec extends Specification {
 
     def setup() {
@@ -18,34 +20,36 @@ class TagServiceSpec extends Specification {
     void "test something"() {
     }
 
-    void "fetchById should return the tag with the given id"(){
+    void "fetchTagById should return the tag with the given id"(){
         given:
             Tag tag = new Tag(name: "Jewelry")
             tag.save()
 
         when:
-            Tag fetchedTag = service.fetchById(tag.id)
+            Tag fetchedTag = service.fetchTagById(1L)
 
         then:
-            fetchedTag.id = tag.id
+            fetchedTag.id == tag.id
             fetchedTag.name == tag.name
     }
 
-    void "fetchAll should return list of all the tags"(){
+    void "fetchAllTag should return list of all the tags"(){
         given:
             Tag tag1 = new Tag(name: "Jewelry")
             tag1.save()
             Tag tag2 = new Tag(name: "Clothes")
             tag2.save()
+            List<Tag> fetchedTags = Tag.findAll()
 
         when:
-            List<Tag> fetchedTags = service.fetchAll()
+            service.fetchAllTag()
 
         then:
-            fetchedTags[1].id == tag1.id
-            fetchedTags[1].name == tag1.name
-            fetchedTags[2].id == tag2.id
-            fetchedTags[2].name == tag2.name
+            fetchedTags.size() == 2
+            fetchedTags[0].id == tag1.id
+            fetchedTags[0].name == tag1.name
+            fetchedTags[1].id == tag2.id
+            fetchedTags[1].name == tag2.name
     }
 
     void "createTag should create and return new tag with the correct information"(){
@@ -62,21 +66,25 @@ class TagServiceSpec extends Specification {
 
     void "updateTag should update the tag's information and save it"(){
         given:
-            Long tagId = 1L;
+            Long tagId = 1L
             String tagName = "Jewelry"
+            Tag tag = new Tag(name: "Jewelry")
+            service.fetchTagById(tagId) >> tag
+            tag.save()
 
         when:
             Tag updatedTag = service.updateTag(tagId, tagName)
 
         then:
-            updatedTag.name = tagName
+            updatedTag.name == tagName
             Tag.exists(updatedTag.id)
     }
 
     void "deleteTag should delete the tag with the given id"(){
         given:
             Tag tag = new Tag(name: "Jewelry")
-            service.fetchById(tag.id) >> tag
+            service.fetchTagById(tag.id) >> tag
+            tag.save()
 
         when:
             service.deleteTag(tag.id)
