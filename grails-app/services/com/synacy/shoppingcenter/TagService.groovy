@@ -9,11 +9,10 @@ class TagService {
         return Tag.findAll()
     }
 
-    public Tag createNewTag(String name, Integer version) {
+    public Tag createNewTag(String name) {
         Tag tag = new Tag()
 
         tag.setName(name)
-        tag.setVersion(version)
 
         return tag.save()
     }
@@ -27,11 +26,10 @@ class TagService {
         return tag
     }
 
-    public Tag updateTag(Long tagId, String name, Integer version) {
+    public Tag updateTag(Long tagId, String name) {
         Tag tag = findTagById(tagId)
 
         tag.setName(name)
-        tag.setVersion(version)
 
         return tag.save()
     }

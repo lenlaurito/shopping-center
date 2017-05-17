@@ -16,9 +16,8 @@ class TagController implements ErrorHandlingTrait {
 
     def create() {
         String name = request.JSON.name ?: null
-        Integer version = request.JSON.version ?: null
 
-        respond(tagService.createNewTag(name, version))
+        respond(tagService.createNewTag(name))
     }
 
     def view(Long tagId) {
@@ -27,9 +26,8 @@ class TagController implements ErrorHandlingTrait {
 
     def update(Long tagId) {
         String name = request.JSON.name ?: null
-        Integer version = request.JSON.version ?: null
 
-        respond(tagService.updateTag(tagId, name, version))
+        respond(tagService.updateTag(tagId, name))
     }
 
     def delete(Long tagId) {
