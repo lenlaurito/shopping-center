@@ -1,5 +1,6 @@
-package com.synacy.shoppingCenter
+package com.synacy.shoppingCenter.marshaller
 
+import com.synacy.shoppingCenter.Shop
 import grails.converters.JSON
 /**
  * Created by steven on 5/17/17.

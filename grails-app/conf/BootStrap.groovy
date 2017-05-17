@@ -1,5 +1,5 @@
-import com.synacy.shoppingCenter.ShopMarshaller
-import com.synacy.shoppingCenter.TagMarshaller
+import com.synacy.shoppingCenter.marshaller.ShopMarshaller
+import com.synacy.shoppingCenter.marshaller.TagMarshaller
 
 class BootStrap {
 

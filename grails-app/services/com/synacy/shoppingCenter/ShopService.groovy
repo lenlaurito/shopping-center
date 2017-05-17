@@ -6,7 +6,7 @@ import grails.transaction.Transactional
 @Transactional
 class ShopService {
 
-    TagService tagService;
+    TagService tagService
 
     def serviceMethod() {
 
@@ -23,7 +23,7 @@ class ShopService {
     Shop createShop(String shopName, String shopDescription, Integer location,List<Long> tagIds){
         Shop shop = new Shop()
 
-        if(location < 0 && location < 5){throw new InvalidDataPassed("Invalid location used")}
+        if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
 
         List<Tag> tags = shopTagValidator(tagIds)
 
@@ -35,10 +35,14 @@ class ShopService {
         return shop.save()
     }
 
-    Shop updateShop(Long shopId, String shopName, String shopDescription){
+    Shop updateShop(Long shopId, String shopName, String shopDescription, Integer location){
         Shop shopToBeUpdated = fetchShopById(shopId)
         shopToBeUpdated.name = shopName
         shopToBeUpdated.description = shopDescription
+        shopToBeUpdated.location = location
+
+        if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
+
         return shopToBeUpdated.save()
     }
 
