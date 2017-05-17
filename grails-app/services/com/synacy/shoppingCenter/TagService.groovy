@@ -1,6 +1,6 @@
 package com.synacy.shoppingCenter
 
-import com.synacy.shoppingCenter.exceptions.EntityAlreadyExistsException
+import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
 import grails.transaction.Transactional
 
 @Transactional

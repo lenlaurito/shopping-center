@@ -1,4 +1,4 @@
-package com.synacy.shoppingCenter.utils
+package com.synacy.shoppingCenter.util
 
 /**
  * Created by steven on 5/18/17.

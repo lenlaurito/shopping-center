@@ -1,6 +1,6 @@
 package com.synacy.shoppingCenter
 
-import com.synacy.shoppingCenter.exceptions.InvalidDataPassed
+import com.synacy.shoppingCenter.exception.InvalidDataPassed
 import grails.transaction.Transactional
 
 @Transactional

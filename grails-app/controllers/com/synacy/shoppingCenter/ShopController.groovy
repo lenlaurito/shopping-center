@@ -1,10 +1,11 @@
 package com.synacy.shoppingCenter
 
-import com.synacy.shoppingCenter.exceptions.InvalidDataPassed
-import com.synacy.shoppingCenter.utils.ControllerUtils
+import com.synacy.shoppingCenter.exception.InvalidDataPassed
+import com.synacy.shoppingCenter.exception.NoContentFoundException
+import com.synacy.shoppingCenter.util.ControllerUtils
 import org.springframework.http.HttpStatus
 
-class ShopController {
+class ShopController{
 
     static responseFormats = ['json']
 
@@ -15,11 +16,13 @@ class ShopController {
 
     def fetchShop(Long shopId){
         Shop shop = shopService.fetchShopById(shopId)
+        if(!shop){ throw new NoContentFoundException("No shop with the Id found")}
         respond(shop)
     }
 
     def fetchAllShop(){
         List<Shop> shopList = shopService.fetchAllShop()
+        if(!shopList){ throw new NoContentFoundException("No shop with the Id found")}
         respond(shopList)
     }
 
@@ -57,6 +60,11 @@ class ShopController {
 
     def handleInvalidDataPassed(InvalidDataPassed e) {
         response.status = HttpStatus.NOT_ACCEPTABLE.value()
+        respond([error: e.getMessage()])
+    }
+
+    def handleNoContentException(NoContentFoundException e) {
+        response.status = HttpStatus.NOT_FOUND.value()
         respond([error: e.getMessage()])
     }
 }

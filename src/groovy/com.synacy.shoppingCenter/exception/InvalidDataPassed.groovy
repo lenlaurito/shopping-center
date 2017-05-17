@@ -1,4 +1,4 @@
-package com.synacy.shoppingCenter.exceptions
+package com.synacy.shoppingCenter.exception
 
 /**
  * Created by steven on 5/17/17.
