@@ -46,8 +46,8 @@ class ShopController{
         Integer location = request.JSON.location ?: null
         List<Long> tagIds = request.JSON.tags ?: null
 
-        if(controllerUtils.argumentNullChecker(name,description,location)){
-            throw new InvalidDataPassed("Missing required data")
+        if(controllerUtils.argumentNullChecker(name,description,location) || (tagIds ? tagIds.size():0) > 5){
+            throw new InvalidDataPassed("Invalid/Missing Required data")
         }
 
         Shop shop = shopService.createShop(name, description, location, tagIds)
@@ -58,12 +58,13 @@ class ShopController{
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
         Integer location = request.JSON.location ?: null
+        List<Long> tagIds = request.JSON.tags ?: null
 
-        if(controllerUtils.argumentNullChecker(name,description,location)){
-            throw new InvalidDataPassed("Missing required data")
+        if(controllerUtils.argumentNullChecker(name,description,location) || (tagIds ? tagIds.size():0) > 5){
+            throw new InvalidDataPassed("Invalid/Missing Required data")
         }
 
-        Shop shop = shopService.updateShop(shopId, name, description, location)
+        Shop shop = shopService.updateShop(shopId, name, description, location, tagIds)
         respond(shop)
     }
 

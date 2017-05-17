@@ -28,13 +28,11 @@ class ShopService {
         return Shop.count()
     }
 
-    Shop createShop(String shopName, String shopDescription, Integer location,List<Long> tagIds){
-        Shop shop = new Shop()
-
+    Shop createShop(String shopName, String shopDescription, Integer location, List<Long> tagIds){
         if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
-
         List<Tag> tags = shopTagValidator(tagIds)
 
+        Shop shop = new Shop()
         shop.name = shopName
         shop.description = shopDescription
         shop.location = location
@@ -43,13 +41,15 @@ class ShopService {
         return shop.save()
     }
 
-    Shop updateShop(Long shopId, String shopName, String shopDescription, Integer location){
+    Shop updateShop(Long shopId, String shopName, String shopDescription, Integer location, List<Long> tagIds){
+        if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
+        List<Tag> tags = shopTagValidator(tagIds)
+
         Shop shopToBeUpdated = fetchShopById(shopId)
         shopToBeUpdated.name = shopName
         shopToBeUpdated.description = shopDescription
         shopToBeUpdated.location = location
-
-        if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
+        shopToBeUpdated.tags = tags
 
         return shopToBeUpdated.save()
     }
