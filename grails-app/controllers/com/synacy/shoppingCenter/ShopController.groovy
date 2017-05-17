@@ -22,7 +22,7 @@ class ShopController{
 
     def fetchAllShop(){
         Integer max = params.max ? Integer.parseInt(params.max) : null
-        Integer offset = params.max ? Integer.parseInt(params.offset) : null
+        Integer offset = params.offset ? Integer.parseInt(params.offset) : null
 
         List<Shop> shopList
 
