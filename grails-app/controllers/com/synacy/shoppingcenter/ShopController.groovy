@@ -18,8 +18,9 @@ class ShopController implements ErrorHandlingTrait {
     def create() {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
+        List<Long> tags = request.JSON.tags ?: null
 
-        Shop shop = shopService.createNewShop(name, description)
+        Shop shop = shopService.createNewShop(name, description, tags)
 
         respond(shop)
     }
@@ -33,8 +34,9 @@ class ShopController implements ErrorHandlingTrait {
     def update(Long shopId) {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
+        List<Long> tags = request.JSON.tags ?: null
 
-        Shop shop = shopService.updateShop(shopId, name, description)
+        Shop shop = shopService.updateShop(shopId, name, description, tags)
 
         respond(shop)
     }

@@ -17,7 +17,7 @@ class TagService {
         return tag.save()
     }
 
-    public Tag findTagById(Long tagId) {
+    public Tag fetchTagById(Long tagId) {
         Tag tag = Tag.findById(tagId)
 
         if (!tag)
