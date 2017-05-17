@@ -24,7 +24,6 @@ class TagController {
     def createTag(){
         String name = request.JSON.name ?: null
         Tag tag = tagService.createTag(name)
-        println(tag.name)
         respond(tag)
     }
 

@@ -3,5 +3,9 @@ package com.synacy.shoppingCenter.exceptions
 /**
  * Created by steven on 5/17/17.
  */
-class InvalidDataPassed {
+class InvalidDataPassed extends RuntimeException{
+
+    public InvalidDataPassed(String message) {
+        super(message)
+    }
 }

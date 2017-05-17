@@ -5,6 +5,7 @@ class Shop {
 	Long id
 	String name
 	String description
+	Integer location
 
 	static constraints = {
 		description nullable: true

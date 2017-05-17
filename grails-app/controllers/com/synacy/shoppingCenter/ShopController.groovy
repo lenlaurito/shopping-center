@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter
 
+import com.synacy.shoppingCenter.exceptions.InvalidDataPassed
 import org.springframework.http.HttpStatus
 
 class ShopController {
@@ -24,9 +25,10 @@ class ShopController {
     def createShop(){
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
+        Integer location = request.JSON.location ?: null
         List<Long> tagIds = request.JSON.tags ?: null
 
-        Shop shop = shopService.createShop(name, description, tagIds)
+        Shop shop = shopService.createShop(name, description, location, tagIds)
 
         respond(shop, [status: HttpStatus.CREATED])
     }
@@ -41,5 +43,10 @@ class ShopController {
     def removeShop(Long shopId){
         shopService.deleteShop(shopId)
         render(status: HttpStatus.NO_CONTENT)
+    }
+
+    def handleInvalidDataPassed(InvalidDataPassed e) {
+        response.status = HttpStatus.NOT_ACCEPTABLE.value()
+        respond([error: e.getMessage()])
     }
 }

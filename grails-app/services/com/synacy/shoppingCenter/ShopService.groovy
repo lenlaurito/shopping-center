@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter
 
+import com.synacy.shoppingCenter.exceptions.InvalidDataPassed
 import grails.transaction.Transactional
 
 @Transactional
@@ -19,13 +20,16 @@ class ShopService {
         return Shop.findAll()
     }
 
-    Shop createShop(String shopName, String shopDescription, List<Long> tagIds){
+    Shop createShop(String shopName, String shopDescription, Integer location,List<Long> tagIds){
         Shop shop = new Shop()
+
+        if(location < 0 && location < 5){throw new InvalidDataPassed("Invalid location used")}
 
         List<Tag> tags = shopTagValidator(tagIds)
 
         shop.name = shopName
         shop.description = shopDescription
+        shop.location = location
         shop.tags = tags
 
         return shop.save()
