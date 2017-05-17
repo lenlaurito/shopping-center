@@ -9,12 +9,11 @@ class ShopService {
         return Shop.findAll()
     }
 
-    public Shop createNewShop(String name, String description, Integer version) {
+    public Shop createNewShop(String name, String description) {
         Shop shop = new Shop()
 
         shop.setName(name)
         shop.setDescription(description)
-        shop.setVersion(version)
 
         return shop.save()
     }
@@ -29,12 +28,11 @@ class ShopService {
         return shop
     }
 
-    public Shop updateShop(Long shopId, String name, String description, Integer version) {
+    public Shop updateShop(Long shopId, String name, String description) {
         Shop shop = fetchShopById(shopId)
 
         shop.setName(name)
         shop.setDescription(description)
-        shop.setVersion(version)
 
         return shop.save();
     }
