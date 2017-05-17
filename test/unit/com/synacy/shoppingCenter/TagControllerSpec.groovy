@@ -63,7 +63,7 @@ class TagControllerSpec extends Specification {
 
         then:
             response.status == HttpStatus.CREATED.value()
-            response.json.name == tagName
+            response.json.name == tag.name
     }
 
     void "updateTag should respond with the update Tag and its details"(){
