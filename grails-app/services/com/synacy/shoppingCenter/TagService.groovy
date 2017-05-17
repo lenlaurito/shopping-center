@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter
 
+import com.synacy.shoppingCenter.exceptions.EntityAlreadyExistsException
 import grails.transaction.Transactional
 
 @Transactional
@@ -18,9 +19,16 @@ class TagService {
     }
 
     Tag createTag(String tagName){
-        Tag tag = new Tag()
-        tag.name = tagName
-        return tag.save()
+        Tag checkTagName = Tag.findByName(tagName)
+
+        if(checkTagName == null){
+            throw EntityAlreadyExistsException("Tag Already Exists")
+        }
+        else{
+            Tag tag = new Tag()
+            tag.name = tagName
+            return tag.save()
+        }
     }
 
     Tag updateTag(Long tagId, String tagName){

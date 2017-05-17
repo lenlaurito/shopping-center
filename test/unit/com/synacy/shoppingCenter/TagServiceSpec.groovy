@@ -54,6 +54,9 @@ class TagServiceSpec extends Specification {
     void "createTag should create and return new tag with the correct information"(){
         given:
             String tagName = "Jewelry"
+            Tag tag = new Tag(name: tagName)
+            tag.save()
+            Tag.findByName(tagName) >> tag
 
         when:
             Tag createdTag = service.createTag(tagName)
