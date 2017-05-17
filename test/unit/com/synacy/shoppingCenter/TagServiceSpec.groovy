@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter
 
+import com.synacy.shoppingCenter.exceptions.EntityAlreadyExistsException
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -54,6 +55,19 @@ class TagServiceSpec extends Specification {
     void "createTag should create and return new tag with the correct information"(){
         given:
             String tagName = "Jewelry"
+            Tag.findByName(tagName) >> null
+
+        when:
+            Tag createdTag = service.createTag(tagName)
+
+        then:
+            createdTag.name == tagName
+            Tag.exists(createdTag.id)
+    }
+
+    void "createTag should throw exception when tag name already exists"(){
+        given:
+            String tagName = "Jewelry"
             Tag tag = new Tag(name: tagName)
             tag.save()
             Tag.findByName(tagName) >> tag
@@ -62,8 +76,7 @@ class TagServiceSpec extends Specification {
             Tag createdTag = service.createTag(tagName)
 
         then:
-            createdTag.name == tagName
-            Tag.exists(createdTag.id)
+            EntityAlreadyExistsException exception = thrown()
     }
 
     void "updateTag should update the tag's information and save it"(){

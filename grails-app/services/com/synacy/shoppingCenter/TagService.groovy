@@ -21,8 +21,8 @@ class TagService {
     Tag createTag(String tagName){
         Tag checkTagName = Tag.findByName(tagName)
 
-        if(checkTagName == null){
-            throw EntityAlreadyExistsException("Tag Already Exists")
+        if(checkTagName != null){
+            throw new EntityAlreadyExistsException("Tag Already Exists")
         }
         else{
             Tag tag = new Tag()
