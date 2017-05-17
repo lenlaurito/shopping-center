@@ -39,10 +39,9 @@ class TagServiceSpec extends Specification {
             tag1.save()
             Tag tag2 = new Tag(name: "Clothes")
             tag2.save()
-            List<Tag> fetchedTags = Tag.findAll()
 
         when:
-            service.fetchAllTag()
+            List<Tag> fetchedTags = service.fetchAllTag()
 
         then:
             fetchedTags.size() == 2
