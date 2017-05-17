@@ -1,4 +1,4 @@
-package shopping.center
+package com.synacy.shoppingCenter
 
 import grails.transaction.Transactional
 

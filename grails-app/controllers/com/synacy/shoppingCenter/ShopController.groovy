@@ -1,4 +1,4 @@
-package shopping.center
+package com.synacy.shoppingCenter
 
 class ShopController {
 

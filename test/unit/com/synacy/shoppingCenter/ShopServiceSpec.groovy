@@ -1,4 +1,4 @@
-package shopping.center
+package com.synacy.shoppingCenter
 
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -6,8 +6,8 @@ import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-@TestFor(TagService)
-class TagServiceSpec extends Specification {
+@TestFor(ShopService)
+class ShopServiceSpec extends Specification {
 
     def setup() {
     }
