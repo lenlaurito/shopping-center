@@ -21,9 +21,23 @@ class ShopController{
     }
 
     def fetchAllShop(){
-        List<Shop> shopList = shopService.fetchAllShop()
-        if(!shopList){ throw new NoContentFoundException("No shop with the Id found")}
-        respond(shopList)
+        Integer max = params.max ? Integer.parseInt(params.max) : null
+        Integer offset = params.max ? Integer.parseInt(params.offset) : null
+
+        List<Shop> shopList
+
+        if(!max && !offset){
+            shopList = shopService.fetchAllShop()
+            if(!shopList){ throw new NoContentFoundException("No shop with the Id found")}
+            respond(shopList)
+        }
+        else{
+            shopList = shopService.fetchShops(max, offset)
+            if(!shopList){ throw new NoContentFoundException("No shop with the Id found")}
+            Integer shopCount = shopService.fetchTotalNumberOfShops()
+            Map<String, Object> paginatedShopDetails = [totalRecords: shopCount, records: shopList]
+            respond(paginatedShopDetails)
+        }
     }
 
     def createShop(){

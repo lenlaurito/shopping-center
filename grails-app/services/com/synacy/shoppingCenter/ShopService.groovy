@@ -20,6 +20,14 @@ class ShopService {
         return Shop.findAll()
     }
 
+    List<Shop> fetchShops(Integer max, Integer offset) {
+        return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
+    }
+
+    Integer fetchTotalNumberOfShops() {
+        return Shop.count()
+    }
+
     Shop createShop(String shopName, String shopDescription, Integer location,List<Long> tagIds){
         Shop shop = new Shop()
 
