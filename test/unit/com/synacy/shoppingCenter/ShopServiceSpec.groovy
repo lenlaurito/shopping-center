@@ -26,7 +26,7 @@ class ShopServiceSpec extends Specification {
             shop.save()
 
         when:
-            Shop fetchedShop = service.fetchById(shop.id)
+            Shop fetchedShop = service.fetchShopById(shop.id)
 
         then:
             fetchedShop.id == shop.id
@@ -63,8 +63,8 @@ class ShopServiceSpec extends Specification {
             Shop createdShop = service.createShop(shopName, shopDescription)
 
         then:
-            createdShop.name = shopName
-            createdShop.description = shopDescription
+            createdShop.name == shopName
+            createdShop.description == shopDescription
             Shop.exists(createdShop.id)
     }
 
@@ -80,14 +80,14 @@ class ShopServiceSpec extends Specification {
             Shop updatedShop = service.updateShop(shopId, shopName, shopDescription)
 
         then:
-            updatedShop.name = shopName
-            updatedShop.description = shopDescription
+            updatedShop.name == shopName
+            updatedShop.description == shopDescription
             Shop.exists(updatedShop.id)
     }
 
     void "deleteShop should delete the shop with the given id"(){
         given:
-            Shop shop = new Shop(name: shopName, description: shopDescription)
+            Shop shop = new Shop(name: "shopName", description: "shopDescription")
             service.fetchShopById(shop.id) >> shop
             shop.save()
 
