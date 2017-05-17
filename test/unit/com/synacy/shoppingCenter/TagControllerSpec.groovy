@@ -1,6 +1,7 @@
 package com.synacy.shoppingCenter
 
 import grails.test.mixin.TestFor
+import org.springframework.http.HttpStatus
 import spock.lang.Specification
 
 /**
@@ -12,6 +13,7 @@ class TagControllerSpec extends Specification {
     TagService tagService = Mock()
 
     def setup() {
+        controller.tagService = tagService
     }
 
     def cleanup() {
@@ -22,7 +24,7 @@ class TagControllerSpec extends Specification {
 
     void "fetchTag should respond with the Tag with the given id"(){
         given:
-            Long tagId = 1L;
+            Long tagId = 1L
             Tag tag = new Tag(name: "Jewelry")
             tagService.fetchTagById(tagId) >> tag
 
@@ -30,7 +32,7 @@ class TagControllerSpec extends Specification {
             controller.fetchTag(tagId)
 
         then:
-            reponse.status == HttpStatus.OK.value()
+            response.status == HttpStatus.OK.value()
             response.json.name == "Jewelry"
     }
 
@@ -44,53 +46,48 @@ class TagControllerSpec extends Specification {
             controller.fetchAllTag()
 
         then:
-            reponse.status == HttpStatus.OK.value()
+            response.status == HttpStatus.OK.value()
             response.json.size() == 2
-            reponse.json.find{it.name == "Jewelry"} != null
-            reponse.json.find{it.name == "Clothes"} != null
+            response.json.find{it.name == "Jewelry"} != null
+            response.json.find{it.name == "Clothes"} != null
     }
 
     void "createTag should respond with the newly created Tag and its details"(){
-        String name = "Jewelry"
         given:
-            request.json = [name: name]
-            Tag tag = new Tag(name: name)
+            String tagName = "Jewelry"
+            request.json = [name: tagName]
+            Tag tag = new Tag(name: tagName)
 
         when:
             controller.createTag()
 
         then:
             response.status == HttpStatus.CREATED.value()
-            response.json.name == name
+            response.json.name == tagName
     }
 
     void "updateTag should respond with the update Tag and its details"(){
         given:
             Long tagId = 1L
-            String name = "Jewelry"
-            request.json = [name: name]
-            Tag tag = new Tag()
-            tagService.fetchTagById(tagId) >> tag
-
+            request.json = [name: "Jewelry"]
+            Tag tag = new Tag(name: "Jewelry")
+            tagService.updateTag(tagId,"Jewelry") >> tag
 
         when:
             controller.updateTag(tagId)
 
         then:
-            reponse.status == HttpStatus.OK.value()
-            response.name == name
+            response.status == HttpStatus.OK.value()
+            response.json.name == name
     }
 
     void "removeTag should remove the Tag with the given tagId"(){
         given:
             Long tagId = 1L
-            Tag tag = new Tag(name: "Jewelry")
-            tagService.fetchTagById(tagId) >> tag
-
         when:
             controller.removeTag(tagId)
 
         then:
-            reponse.status == HttpStatus.NO_CONTENT.value()
+            response.status == HttpStatus.NO_CONTENT.value()
     }
 }

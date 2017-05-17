@@ -1,4 +1,4 @@
-package unit.com.synacy.shoppingCenter
+package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.Shop
 import grails.test.mixin.TestFor
