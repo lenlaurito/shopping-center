@@ -24,7 +24,7 @@ environments {
 	}
 	test {
 		dataSource {
-			dbCreate = "create-drop"
+			dbCreate = "update"
 			driverClassName = "org.postgresql.Driver"
 			username = "postgres"
 			password = "password"

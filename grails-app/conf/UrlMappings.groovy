@@ -19,7 +19,7 @@ class UrlMappings {
         "/api/v1/shop"(controller: "shop") {
             action = [GET: "fetchAllShop", POST: "createShop"]
         }
-        "/api/v1/shop/${tagId}"(controller: "shop") {
+        "/api/v1/shop/${shopId}"(controller: "shop") {
             action = [GET: "fetchShop", PUT: "updateShop", DELETE: "removeShop"]
         }
 
