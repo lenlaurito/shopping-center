@@ -20,10 +20,14 @@ class ShopController {
         respond(shopList)
     }
 
+    //============Update Test Later===========
     def createShop(){
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
-        Shop shop = shopService.createShop(name, description)
+        List<Long> tagIds = request.JSON.tags ?: null
+
+        Shop shop = shopService.createShop(name, description, tagIds)
+
         respond(shop, [status: HttpStatus.CREATED])
     }
 

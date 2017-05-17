@@ -27,7 +27,8 @@ class TagService {
         else{
             Tag tag = new Tag()
             tag.name = tagName
-            return tag.save()
+            tag.save()
+            return tag
         }
     }
 
