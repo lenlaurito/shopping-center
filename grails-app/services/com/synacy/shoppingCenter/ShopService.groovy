@@ -36,7 +36,6 @@ class ShopService {
     }
 
     Shop createShop(String shopName, String shopDescription, Integer location, List<Long> tagIds){
-         if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
         List<Tag> tags = shopTagValidator(tagIds)
 
         Shop shop = new Shop()
@@ -49,7 +48,6 @@ class ShopService {
     }
 
     Shop updateShop(Long shopId, String shopName, String shopDescription, Integer location, List<Long> tagIds){
-        if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
         List<Tag> tags = shopTagValidator(tagIds)
 
         Shop shopToBeUpdated = fetchShopById(shopId)

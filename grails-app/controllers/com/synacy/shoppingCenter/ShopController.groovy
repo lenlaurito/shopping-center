@@ -2,7 +2,6 @@ package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
 import com.synacy.shoppingCenter.trait.ExceptionHandlerTrait
-import com.synacy.shoppingCenter.util.ControllerUtils
 import org.springframework.http.HttpStatus
 
 class ShopController implements ExceptionHandlerTrait{
@@ -10,7 +9,6 @@ class ShopController implements ExceptionHandlerTrait{
     static responseFormats = ['json']
 
     ShopService shopService
-    ControllerUtils controllerUtils = new ControllerUtils()
 
     def index() { }
 
@@ -39,9 +37,9 @@ class ShopController implements ExceptionHandlerTrait{
         Integer location = request.JSON.location ?: null
         List<Long> tagIds = request.JSON.tags ?: null
 
-        if(controllerUtils.argumentNullChecker(name,description,location) || (tagIds ? tagIds.size():0) > 5){
-            throw new InvalidDataPassed("Invalid Request Body")
-        }
+        if(!name || !description || !location){throw new InvalidDataPassed("Invalid Request Body")}
+        if((tagIds ? tagIds.size():0) > 5){throw new InvalidDataPassed("Invalid Tag Size, Maximum should be 5")}
+        if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
 
         Shop shop = shopService.createShop(name, description, location, tagIds)
         respond(shop, [status: HttpStatus.CREATED])
@@ -53,9 +51,10 @@ class ShopController implements ExceptionHandlerTrait{
         Integer location = request.JSON.location ?: null
         List<Long> tagIds = request.JSON.tags ?: null
 
-        if(controllerUtils.argumentNullChecker(name,description,location) || (tagIds ? tagIds.size():0) > 5){
-            throw new InvalidDataPassed("Invalid Request Body")
-        }
+        if(!name || !description || !location){throw new InvalidDataPassed("Invalid Request Body")}
+        if((tagIds ? tagIds.size():0) > 5){throw new InvalidDataPassed("Invalid Tag Size, Maximum should be 5")}
+        if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
+
 
         Shop shop = shopService.updateShop(shopId, name, description, location, tagIds)
         respond(shop)
