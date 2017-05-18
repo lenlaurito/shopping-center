@@ -2,10 +2,11 @@ package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
 import com.synacy.shoppingCenter.exception.NoContentFoundException
+import com.synacy.shoppingCenter.trait.ExceptionHandlerTrait
 import com.synacy.shoppingCenter.util.ControllerUtils
 import org.springframework.http.HttpStatus
 
-class ShopController{
+class ShopController implements ExceptionHandlerTrait{
 
     static responseFormats = ['json']
 
@@ -47,7 +48,7 @@ class ShopController{
         List<Long> tagIds = request.JSON.tags ?: null
 
         if(controllerUtils.argumentNullChecker(name,description,location) || (tagIds ? tagIds.size():0) > 5){
-            throw new InvalidDataPassed("Invalid/Missing Required data")
+            throw new InvalidDataPassed("Invalid Request Body")
         }
 
         Shop shop = shopService.createShop(name, description, location, tagIds)
@@ -61,7 +62,7 @@ class ShopController{
         List<Long> tagIds = request.JSON.tags ?: null
 
         if(controllerUtils.argumentNullChecker(name,description,location) || (tagIds ? tagIds.size():0) > 5){
-            throw new InvalidDataPassed("Invalid/Missing Required data")
+            throw new InvalidDataPassed("Invalid Request Body")
         }
 
         Shop shop = shopService.updateShop(shopId, name, description, location, tagIds)
@@ -73,13 +74,4 @@ class ShopController{
         render(status: HttpStatus.NO_CONTENT)
     }
 
-    def handleInvalidDataPassed(InvalidDataPassed e) {
-        response.status = HttpStatus.NOT_ACCEPTABLE.value()
-        respond([error: e.getMessage()])
-    }
-
-    def handleNoContentException(NoContentFoundException e) {
-        response.status = HttpStatus.NOT_FOUND.value()
-        respond([error: e.getMessage()])
-    }
 }
