@@ -13,15 +13,6 @@ import spock.lang.Specification
 @Mock([Tag])
 class TagServiceSpec extends Specification {
 
-    def setup() {
-    }
-
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
-
     void "fetchTagById should return the tag with the given id"(){
         given:
             Tag tag = new Tag(name: "Jewelry")
