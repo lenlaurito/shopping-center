@@ -5,7 +5,7 @@ import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.transaction.Transactional
 
 @Transactional
-class TagService {
+class TagService{
 
     Tag fetchTagById(Long tagId){
         Tag tag = Tag.findById(tagId)
@@ -21,8 +21,7 @@ class TagService {
 
     Tag createTag(String tagName){
         Tag checkTagName = Tag.findByName(tagName)
-
-        if(!checkTagName){throw new EntityAlreadyExistsException("Tag Already Exists")}
+        if(checkTagName){throw new EntityAlreadyExistsException("Tag Already Exists")}
 
         Tag tag = new Tag()
         tag.name = tagName
@@ -32,6 +31,9 @@ class TagService {
     }
 
     Tag updateTag(Long tagId, String tagName){
+        Tag checkTagName = Tag.findByName(tagName)
+        if(checkTagName){throw new EntityAlreadyExistsException("Tag Already Exists")}
+
         Tag tagToBeUpdated = fetchTagById(tagId)
         tagToBeUpdated.name = tagName
         return tagToBeUpdated.save()

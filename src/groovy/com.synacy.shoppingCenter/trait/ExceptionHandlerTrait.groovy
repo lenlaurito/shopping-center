@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter.trait
 
+import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
 import com.synacy.shoppingCenter.exception.NoContentFoundException
 import org.springframework.http.HttpStatus
@@ -18,4 +19,8 @@ trait ExceptionHandlerTrait {
         respond([error: e.getMessage()])
     }
 
+    def handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
+        response.status = HttpStatus.NOT_ACCEPTABLE.value()
+        respond([error: e.getMessage()])
+    }
 }

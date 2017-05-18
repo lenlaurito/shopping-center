@@ -2,6 +2,7 @@ package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
 import com.synacy.shoppingCenter.trait.ExceptionHandlerTrait
+import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
 import org.springframework.http.HttpStatus
 
 class TagController implements ExceptionHandlerTrait{
