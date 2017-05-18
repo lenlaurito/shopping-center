@@ -10,9 +10,15 @@ class ShopController implements ErrorHandlingTrait {
     ShopService shopService
 
     def index() {
-        List<Shop> shops = shopService.fetchAllShops()
+        Integer offset = params.max ? Integer.parseInt(params.offset) : null
+        Integer max = params.max ? Integer.parseInt(params.max) : null
 
-        respond(shops)
+        List<Shop> shops = shopService.fetchAllShops(offset, max)
+
+        Integer shopCount = shopService.fetchTotalNumberOfShops()
+        Map<String, Object> paginatedShoptDetails = [totalRecords: shopCount, records: shops]
+
+        respond(paginatedShoptDetails)
     }
 
     def create() {

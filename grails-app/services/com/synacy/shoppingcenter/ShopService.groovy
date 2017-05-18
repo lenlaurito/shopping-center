@@ -7,8 +7,12 @@ class ShopService {
 
     TagService tagService
 
-    public List<Shop> fetchAllShops() {
-        return Shop.findAll()
+    public List<Shop> fetchAllShops(Integer offset, Integer max) {
+        return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
+    }
+
+    public Integer fetchTotalNumberOfShops() {
+        return Shop.count()
     }
 
     public Shop createNewShop(String name, String description, List<Long> tags) {
