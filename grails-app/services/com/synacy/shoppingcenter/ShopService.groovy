@@ -21,12 +21,21 @@ class ShopService {
         shop.setName(name)
         shop.setDescription(description)
 
+        StringBuilder builder = new StringBuilder()
+
         tags.each {
-            shop.addToTags(tagService.fetchTagById(it))
+            try {
+                shop.addToTags(tagService.fetchTagById(it))
+            } catch(ResourceNotFoundException e) {
+                builder.append(e.getMessage()).append("\n")
+            }
         }
 
+        if (builder.length() > 0)
+            throw new InvalidRequestException(builder.toString())
+
         if (shop.tags && shop.tags.size() > 5)
-            throw new InvalidRequestException("maximum tags limit reached");
+            throw new InvalidRequestException("maximum tags limit reached")
 
         return shop.save()
     }
@@ -49,14 +58,23 @@ class ShopService {
 
         shop.tags = []
 
+        StringBuilder builder = new StringBuilder()
+
         tags.each {
-            shop.addToTags(tagService.fetchTagById(it))
+            try {
+                shop.addToTags(tagService.fetchTagById(it))
+            } catch(ResourceNotFoundException e) {
+                builder.append(e.getMessage()).append("\n")
+            }
         }
+
+        if (builder.length() > 0)
+            throw new InvalidRequestException(builder.toString())
 
         if (shop.tags.size() > 5)
             throw new InvalidRequestException("maximum tags limit reached");
 
-        shop = shop.save()
+        return shop.save()
     }
 
     public void deleteShopById(Long shopId)  {

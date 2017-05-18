@@ -20,7 +20,7 @@ class ShopControllerSpec extends Specification {
     def cleanup() {
     }
 
-    void "index_should_respond_with_all_the_shops"() {
+    void "index should respond with all the shops"() {
         given:
 
         Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton")
@@ -45,7 +45,7 @@ class ShopControllerSpec extends Specification {
     }
 
 
-    void "index_paginated_should_respond_with_paginated_the_shops"() {
+    void "index paginated should_respond with paginated the shops"() {
         given:
 
         String offset = "0"
@@ -72,7 +72,7 @@ class ShopControllerSpec extends Specification {
         response.json.records.get(0).description == shop1.description
     }
 
-    void "create_without_tags_should_respond_with_new_created_shop_with_no_related_tags"() {
+    void "create without tags should respond with new created shop with no related_tags"() {
         given:
         String name = "sample"
         String description = "sample"
@@ -95,7 +95,7 @@ class ShopControllerSpec extends Specification {
         response.json.tags ?: null == tags
     }
 
-    void "create_with_tags_should_respond_with_new_created_shop_with_related_tags"() {
+    void "create with tags should respond with new created shop with related tags"() {
         given:
         String name = "sample"
         String description = "sample"
@@ -127,7 +127,7 @@ class ShopControllerSpec extends Specification {
         response.json.tags.get(1).name == tags.get(1).name
     }
 
-    void "view_should_find_existing_shop_by_id"() {
+    void "view should find existing shop by id"() {
         given:
         Long idToFind = 1L
         Shop shop = new Shop(name: "sample", description: "description")
@@ -144,7 +144,7 @@ class ShopControllerSpec extends Specification {
         response.json.description == "description"
     }
 
-    void "view_on_non_existing_shop_should_result_to_404_response_status"() {
+    void "view on non existing shop should result to 404 response status"() {
         given:
         Long idToFind = 123L
 
@@ -158,7 +158,7 @@ class ShopControllerSpec extends Specification {
         response.status == HttpStatus.NOT_FOUND.value()
     }
 
-    void "update_should_update_the_shop_with"() {
+    void "update should update the shop with"() {
         given:
 
         Long idToFind = 123L
@@ -190,7 +190,7 @@ class ShopControllerSpec extends Specification {
         response.json.tags.get(0).name == tags.get(0).name
     }
 
-    void "delete_should_delete_the_shop"() {
+    void "delete should delete the shop"() {
         given:
         Long idToFind = 123L
 
