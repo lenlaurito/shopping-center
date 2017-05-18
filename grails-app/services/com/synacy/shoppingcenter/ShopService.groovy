@@ -1,14 +1,26 @@
 package com.synacy.shoppingcenter
 
 import grails.transaction.Transactional
+import org.hibernate.criterion.CriteriaSpecification
 
 @Transactional
 class ShopService {
 
     TagService tagService
 
-    public List<Shop> fetchAllShops(Integer offset, Integer max) {
-        return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
+    public List<Shop> fetchAllShops(Integer offset, Integer max, String tagName) {
+        def matches = Shop.withCriteria() {
+            createAlias('tags', 't' , CriteriaSpecification.LEFT_JOIN)
+            like("t.name", "%"+ tagName +"%")
+            order("name", "asc")
+            firstResult offset
+            maxResults max
+        }
+
+        def resultSet = new HashSet()
+        resultSet.addAll(matches)
+
+        return new ArrayList<>(resultSet)
     }
 
     public Integer fetchTotalNumberOfShops() {
@@ -20,10 +32,13 @@ class ShopService {
 
         shop.setName(name)
         shop.setDescription(description)
-        shop.locations = locations
+        shop.locations = []
 
-            throw InvalidRequestException("error daw shop location size : " +  locations.size())
-        /*
+        locations.each {
+            shop.addToLocations(it)
+        }
+
+
         StringBuilder builder = new StringBuilder()
 
         tags.each {
@@ -39,8 +54,6 @@ class ShopService {
 
         if (shop.tags && shop.tags.size() > 5)
             throw new InvalidRequestException("maximum tags limit reached")
-            */
-
 
         return shop.save()
     }

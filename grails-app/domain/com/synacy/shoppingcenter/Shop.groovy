@@ -8,13 +8,6 @@ class Shop {
 
 	static constraints = {
 		description nullable: true
-		locations(validator: { locations, obj ->
-
-			if (locations.size() > 4)
-				return false
-
-			return true
-		})
 	}
 
 	static mapping = {

@@ -11,7 +11,8 @@ class ShopMarshaller {
                     id          : shop.id,
                     name        : shop.name,
                     description : shop.description,
-                    tags        : shop.tags
+                    tags        : shop.tags,
+                    locations   : shop.locations
 			]
         }
     }
