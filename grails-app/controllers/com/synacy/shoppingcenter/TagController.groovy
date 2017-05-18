@@ -17,7 +17,7 @@ class TagController implements ErrorHandlingTrait {
     def create() {
         String name = request.JSON.name ?: null
 
-        respond(tagService.createNewTag(name))
+        respond(tagService.createNewTag(name), [status: HttpStatus.CREATED])
     }
 
     def view(Long tagId) {
@@ -31,7 +31,7 @@ class TagController implements ErrorHandlingTrait {
     }
 
     def delete(Long tagId) {
-        tagService.deleteTag(tagId)
+        tagService.deleteTagById(tagId)
 
 
         render(status: HttpStatus.NO_CONTENT)

@@ -27,7 +27,7 @@ class TagService {
     }
 
     public Tag updateTag(Long tagId, String name) {
-        Tag tag = findTagById(tagId)
+        Tag tag = fetchTagById(tagId)
 
         tag.setName(name)
 
@@ -35,7 +35,7 @@ class TagService {
     }
 
     public void deleteTagById(Long tagId) {
-        Tag tag = findTagById(tagId)
+        Tag tag = fetchTagById(tagId)
 
         tag.delete()
     }
