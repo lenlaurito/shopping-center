@@ -3,10 +3,13 @@ package com.synacy.shoppingcenter
 import grails.transaction.Transactional
 import com.synacy.shoppingcenter.trait.ErrorHandler
 import com.synacy.shoppingcenter.exception.InvalidFieldException
+import com.synacy.shoppingcenter.exception.NoContentException
 import grails.validation.ValidationException
 
 @Transactional
 class ShopService implements ErrorHandler{
+
+    TagService tagService
 
     def fetchAllShops(Integer max, Integer offset) {
 
@@ -53,5 +56,16 @@ class ShopService implements ErrorHandler{
     def fetchTotalNumberOfShops() {
 
          return Shop.count()
+    }
+
+    def fetchAllShopsByTagId(Long tagId) {
+
+        def tag = tagService.fetchTagById(tagId)
+
+        if(!tag) {
+            throw new NoContentException("This tag does not exist.")
+        }else {
+            return Shop.findAllByTag(tag)
+        }
     }
 }

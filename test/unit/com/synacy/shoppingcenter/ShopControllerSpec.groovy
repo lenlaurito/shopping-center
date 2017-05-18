@@ -26,10 +26,7 @@ class ShopControllerSpec extends Specification {
         given:
             Shop shop1 = new Shop(name: "shop1",  location: Location.FIRST_FLOOR, description: "this is shop1", tags: [])
             Shop shop2 = new Shop(name: "shop2", location: Location.SECOND_FLOOR, description: "this is shop2", tags: [])
-            shopService.fetchAllShops(0, 2) >> [shop1, shop2]
-
-            Integer shopCount = 2
-
+            shopService.fetchAllShops() >> [shop1, shop2]
 
         when:
             controller.fetchShops()
