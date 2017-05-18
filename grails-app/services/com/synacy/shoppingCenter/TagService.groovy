@@ -25,6 +25,7 @@ class TagService{
 
         Tag tag = new Tag()
         tag.name = tagName
+        tag.shops = []
         tag.save()
         return tag
 
