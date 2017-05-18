@@ -11,9 +11,19 @@ class ShopService implements ErrorHandler{
 
     TagService tagService
 
-    def fetchAllShops(Integer max, Integer offset) {
+    def fetchAllShops(Integer max, Integer offset, Long tagId) {
 
-         return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
+        if(tagId) {
+            def tag = tagService.fetchTagById(tagId)
+            if(!tag) {
+                throw new NoContentException("This tag does not exist.")
+                }else {
+                    shops = tagService.fetchAllShopsByTag(tag)
+                    return shops.list([offset: offset, max: max, sort: "id", order: "asc"])
+                }
+        }else {
+            return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
+        }
     }
 
     def fetchShopById(Long shopId) {
@@ -58,14 +68,8 @@ class ShopService implements ErrorHandler{
          return Shop.count()
     }
 
-    def fetchAllShopsByTagId(Long tagId) {
+    def fetchAllShopsByTag(Tag tag) {
 
-        def tag = tagService.fetchTagById(tagId)
-
-        if(!tag) {
-            throw new NoContentException("This tag does not exist.")
-        }else {
-            return Shop.findAllByTag(tag)
-        }
+        return Shop.findAllByTag(tag)
     }
 }

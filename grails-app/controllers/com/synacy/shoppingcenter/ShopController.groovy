@@ -17,15 +17,10 @@ class ShopController implements ErrorHandler{
           Integer offset = params.offset ? Integer.parseInt(params.offset) : null
           Integer tagId = params.tagId ? Long.valueOf(params.tagId) : null
 
-          if(tagId) {
-              List<Shop> shops = shopService.fetchAllShopsByTagId(tagId)
-          } else {
-              List<Shop> shops = shopService.fetchAllShops(max, offset)
-          }
+          List<Shop> shops = shopService.fetchAllShops(max, offset, tagId)
 
           Integer shopCount = shopService.fetchTotalNumberOfShops()
           Map<String, Object> paginatedShopDetails = [totalRecords: shopCount, records: shops]
-
 
           if(!shops) {
             throw new NoContentException("No shops exist.")
