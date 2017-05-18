@@ -1,4 +1,6 @@
-package com.synacy.shoppingcenter
+package com.synacy.shoppingcenter.tag
+
+import com.synacy.shoppingcenter.shop.Shop
 
 class Tag {
 
@@ -6,6 +8,7 @@ class Tag {
 	String name
 
 	static constraints = {
+		name(unique: true)
 	}
 
 	static mapping = {
@@ -15,6 +18,7 @@ class Tag {
 	static belongsTo = Shop
 
 	static hasMany = [
-			shops: Shop
+		shops: Shop
 	]
+
 }
