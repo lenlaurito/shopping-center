@@ -5,10 +5,16 @@ class Shop {
 	Long id
 	String name
 	String description
-	Location location
 
 	static constraints = {
 		description nullable: true
+		locations(validator: { locations, obj ->
+
+			if (locations.size() > 4)
+				return false
+
+			return true
+		})
 	}
 
 	static mapping = {
@@ -16,6 +22,7 @@ class Shop {
 	}
 
 	static hasMany = [
-			tags: Tag
+			tags: Tag,
+			locations: Location
 	]
 }

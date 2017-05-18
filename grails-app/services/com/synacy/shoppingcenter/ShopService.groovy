@@ -15,12 +15,15 @@ class ShopService {
         return Shop.count()
     }
 
-    public Shop createNewShop(String name, String description, List<Long> tags) {
+    public Shop createNewShop(String name, String description, List<Long> tags, List<Location> locations) {
         Shop shop = new Shop()
 
         shop.setName(name)
         shop.setDescription(description)
+        shop.locations = locations
 
+            throw InvalidRequestException("error daw shop location size : " +  locations.size())
+        /*
         StringBuilder builder = new StringBuilder()
 
         tags.each {
@@ -36,6 +39,8 @@ class ShopService {
 
         if (shop.tags && shop.tags.size() > 5)
             throw new InvalidRequestException("maximum tags limit reached")
+            */
+
 
         return shop.save()
     }

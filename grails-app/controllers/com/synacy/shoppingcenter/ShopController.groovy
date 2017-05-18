@@ -25,8 +25,14 @@ class ShopController implements ErrorHandlingTrait {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
         List<Long> tags = request.JSON.tags ?: null
+        def tmp = request.JSON.locations ?: [:]
+        List<Location> locations = [:]
 
-        Shop shop = shopService.createNewShop(name, description, tags)
+        tmp.each {
+            locations.add(Location.valueOfLocation(it))
+        }
+
+        Shop shop = shopService.createNewShop(name, description, tags, locations)
 
         respond(shop, [status: HttpStatus.CREATED])
     }
