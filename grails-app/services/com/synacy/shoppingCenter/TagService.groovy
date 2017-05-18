@@ -7,10 +7,6 @@ import grails.transaction.Transactional
 @Transactional
 class TagService {
 
-    def serviceMethod() {
-
-    }
-
     Tag fetchTagById(Long tagId){
         Tag tag = Tag.findById(tagId)
         if(!tag){ throw new NoContentFoundException("No Tag with the Id found")}

@@ -10,8 +10,6 @@ class ShopController implements ExceptionHandlerTrait{
 
     ShopService shopService
 
-    def index() { }
-
     def fetchShop(Long shopId){
         respond(shopService.fetchShopById(shopId))
     }

@@ -9,10 +9,6 @@ class ShopService {
 
     TagService tagService
 
-    def serviceMethod() {
-
-    }
-
     Shop fetchShopById(Long shopId){
         Shop shop = Shop.findById(shopId)
         if(!shop){ throw new NoContentFoundException("No Shop with the Id found")}
