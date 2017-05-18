@@ -23,7 +23,7 @@ class TagController implements ExceptionHandlerTrait{
         if(!name) { throw new InvalidDataPassed("Tag name in not nullable")}
 
         Tag tag = tagService.createTag(name)
-        respond(tag)
+        respond(tag, status: HttpStatus.CREATED)
     }
 
     def updateTag(Long tagId){

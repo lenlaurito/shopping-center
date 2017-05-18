@@ -33,37 +33,31 @@ class ShopControllerSpec extends Specification {
             response.json.tags == []
     }
 
-    void "fetchAllShop max and offset are null should respond with all the Shops"(){
+    void "fetchAllShop max, offset and tagId not null should respond with all the Paginated Shops"(){
         given:
             Shop shop1 = new Shop(name: "shopName1", description: "shopDescription1", location: 1, tags: [])
-            Shop shop2 = new Shop(name: "shopName2", description: "shopDescription2", location: 1, tags: [])
-            shopService.fetchAllShop() >> [shop1, shop2]
+            Shop shop2 = new Shop(name: "shopName2", description: "shopDescription2", location: 2, tags: [])
+            List<Shop> shopList = [shop1, shop2]
+
+            params.offset = "0"
+            params.max = "2"
+            params.tagId = "1"
+
+            Integer offset = Integer.parseInt(params.offset)
+            Integer max = Integer.parseInt(params.max)
+            Long tagId = Long.parseLong(params.tagId)
+
+            shopService.fetchShops(max, offset, tagId) >> shopList
+            shopService.fetchTotalNumberOfShops() >> 2
 
         when:
             controller.fetchAllShop()
 
         then:
             response.status == HttpStatus.OK.value()
-            response.json.size() == 2
-            response.json.find{it.name == "shopName1" && it.description == "shopDescription1" && it.location == 1 && it.tags == []} != null
-            response.json.find{it.name == "shopName2" && it.description == "shopDescription2" && it.location == 1 && it.tags == []} != null
-    }
-
-    void "fetchAllShop max and offset not null should respond with all the Paginated Shops"(){
-        given:
-            Integer max = 2
-            Integer offset = 0
-            Shop shop1 = new Shop(name: "shopName1", description: "shopDescription1", location: 1, tags: [])
-            Shop shop2 = new Shop(name: "shopName2", description: "shopDescription2", location: 1, tags: [])
-            List<Shop> shopList = [shop1, shop2]
-            shopService.fetchShops(max, offset) >> shopList
-            shopService.fetchTotalNumberOfShops() >> 2
-
-        when:
-            controller.fetchAllShop() >> [totalRecords: 2, records: shopList]
-
-        then:
-            response.status == HttpStatus.OK.value()
+            response.json.totalRecords == 2
+            response.json.records.find {it.name == "shopName1" && it.description  == "shopDescription1" && it.location == 1 && it.tags == []} != null
+            response.json.records.find {it.name == "shopName2" && it.description  == "shopDescription2" && it.location == 2 && it.tags == []} != null
     }
 
     void "createShop should respond with the newly created Shop and its details"(){
