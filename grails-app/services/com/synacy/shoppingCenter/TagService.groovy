@@ -26,15 +26,13 @@ class TagService {
     Tag createTag(String tagName){
         Tag checkTagName = Tag.findByName(tagName)
 
-        if(checkTagName != null){
-            throw new EntityAlreadyExistsException("Tag Already Exists")
-        }
-        else{
-            Tag tag = new Tag()
-            tag.name = tagName
-            tag.save()
-            return tag
-        }
+        if(!checkTagName){throw new EntityAlreadyExistsException("Tag Already Exists")}
+
+        Tag tag = new Tag()
+        tag.name = tagName
+        tag.save()
+        return tag
+
     }
 
     Tag updateTag(Long tagId, String tagName){
