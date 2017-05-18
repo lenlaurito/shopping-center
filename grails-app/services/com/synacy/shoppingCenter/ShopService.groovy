@@ -1,6 +1,7 @@
 package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
+import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.transaction.Transactional
 
 @Transactional
@@ -13,15 +14,21 @@ class ShopService {
     }
 
     Shop fetchShopById(Long shopId){
-        return Shop.findById(shopId)
+        Shop shop = Shop.findById(shopId)
+        if(!shop){ throw new NoContentFoundException("No Shop with the Id found")}
+        return shop
     }
 
     List<Shop> fetchAllShop(){
-        return Shop.findAll()
+        List<Shop> shopList = Shop.findAll()
+        if(!shopList){ throw new NoContentFoundException("No Shops found")}
+        return shopList
     }
 
     List<Shop> fetchShops(Integer max, Integer offset) {
-        return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
+        List<Shop> shopList = Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
+        if(!shopList){ throw new NoContentFoundException("No Shops found")}
+        return shopList
     }
 
     Integer fetchTotalNumberOfShops() {

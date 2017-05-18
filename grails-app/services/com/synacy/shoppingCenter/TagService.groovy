@@ -1,6 +1,7 @@
 package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
+import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.transaction.Transactional
 
 @Transactional
@@ -11,11 +12,15 @@ class TagService {
     }
 
     Tag fetchTagById(Long tagId){
-        return Tag.findById(tagId)
+        Tag tag = Tag.findById(tagId)
+        if(!tag){ throw new NoContentFoundException("No Tag with the Id found")}
+        return tag
     }
 
     List<Tag> fetchAllTag(){
-        return Tag.findAll()
+        List<Tag> tagList = Tag.findAll()
+        if(!tagList){ throw new NoContentFoundException("No Tags found")}
+        return tagList
     }
 
     Tag createTag(String tagName){

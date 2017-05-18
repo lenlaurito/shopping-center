@@ -1,9 +1,10 @@
 package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
+import com.synacy.shoppingCenter.trait.ExceptionHandlerTrait
 import org.springframework.http.HttpStatus
 
-class TagController {
+class TagController implements ExceptionHandlerTrait{
 
     static responseFormats = ['json']
 
@@ -12,13 +13,11 @@ class TagController {
     def index() { }
 
     def fetchTag(Long tagId){
-        Tag tag = tagService.fetchTagById(tagId)
-        respond(tag)
+        respond(tagService.fetchTagById(tagId))
     }
 
     def fetchAllTag(){
-        List<Tag> tagList = tagService.fetchAllTag()
-        respond(tagList)
+        respond(tagService.fetchAllTag())
     }
 
     def createTag(){
@@ -36,11 +35,6 @@ class TagController {
     def removeTag(Long tagId){
         tagService.deleteTag(tagId)
         render(status: HttpStatus.NO_CONTENT)
-    }
-
-    def handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
-        response.status = HttpStatus.NOT_ACCEPTABLE.value()
-        respond([error: e.getMessage()])
     }
 
 }
