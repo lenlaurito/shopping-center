@@ -21,7 +21,7 @@ class TagService {
         Tag tag = Tag.findById(tagId)
 
         if (!tag)
-            throw new ResourceNotFoundException("Tag not found")
+            throw new ResourceNotFoundException("Tag with id '" + tagId + " ' does not exists.")
 
         return tag
     }
