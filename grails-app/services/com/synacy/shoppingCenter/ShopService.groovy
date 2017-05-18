@@ -60,6 +60,7 @@ class ShopService {
     }
 
     List<Tag> shopTagValidator(List<Long> tagIds){
+        tagIds.unique()
         List<Tag> tagList = []
         for(Long id : tagIds){
             Tag tag = tagService.fetchTagById(id)
