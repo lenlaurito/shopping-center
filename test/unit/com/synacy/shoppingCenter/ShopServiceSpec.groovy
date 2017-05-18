@@ -19,12 +19,6 @@ class ShopServiceSpec extends Specification {
         service.tagService = tagService
     }
 
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
-
     void "fetchShopById should return the shop with the given id"(){
         given:
             Shop shop = new Shop(name: "Shop", description: "Description", location: 1, tags: [])

@@ -16,9 +16,6 @@ class ShopControllerSpec extends Specification {
         controller.shopService = shopService
     }
 
-    def cleanup() {
-    }
-
     void "fetchShop should respond with the Shop with the given id"(){
         given:
             Long shopId = 1L
