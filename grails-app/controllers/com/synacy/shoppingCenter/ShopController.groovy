@@ -17,16 +17,14 @@ class ShopController implements ExceptionHandlerTrait{
     def fetchAllShop(){
         Integer max = params.max ? Integer.parseInt(params.max) : null
         Integer offset = params.offset ? Integer.parseInt(params.offset) : null
+        Long tagId = params.tagId ? Long.parseLong(params.tagId) : null
 
-        if(!max && !offset){
-            respond(shopService.fetchAllShop())
-        }
-        else{
-            List<Shop> shopList = shopService.fetchShops(max, offset)
-            Integer shopCount = shopService.fetchTotalNumberOfShops()
-            Map<String, Object> paginatedShopDetails = [totalRecords: shopCount, records: shopList]
-            respond(paginatedShopDetails)
-        }
+        List<Shop> shopList = shopService.fetchShops(max, offset, tagId)
+        Integer shopCount = shopService.fetchTotalNumberOfShops()
+        Map<String, Object> shopDetails = [totalRecords: shopCount, records: shopList]
+
+        respond(shopDetails)
+
     }
 
     def createShop(){

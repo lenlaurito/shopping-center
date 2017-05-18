@@ -11,18 +11,23 @@ class ShopService {
 
     Shop fetchShopById(Long shopId){
         Shop shop = Shop.findById(shopId)
-        if(!shop){ throw new NoContentFoundException("No Shop with the Id found")}
+        if(!shop){ throw new NoContentFoundException("No Shop with the Id found") }
         return shop
     }
 
-    List<Shop> fetchAllShop(){
-        List<Shop> shopList = Shop.findAll()
-        if(!shopList){ throw new NoContentFoundException("No Shops found")}
-        return shopList
-    }
+    List<Shop> fetchShops(Integer max, Integer offset, Long tagId) {
+        List<Shop> shopList = null
 
-    List<Shop> fetchShops(Integer max, Integer offset) {
-        List<Shop> shopList = Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
+        if(tagId) {
+            def tag = tagService.fetchTagById(tagId)
+            if(!tag){ throw new NoContentFoundException("This tag does not exist.") }
+            shopList = Shop.createCriteria().list(max: max, offset: offset) {
+                tags {eq('id', tag.id)}
+                order('id', 'asc')
+            }
+        }
+        else { shopList = Shop.list([offset: offset, max: max, sort: "id", order: "asc"]) }
+
         if(!shopList){ throw new NoContentFoundException("No Shops found")}
         return shopList
     }
