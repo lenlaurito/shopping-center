@@ -25,7 +25,7 @@ class ShopService {
             shop.addToTags(tagService.fetchTagById(it))
         }
 
-        if (shop.tags.size() > 5)
+        if (shop.tags && shop.tags.size() > 5)
             throw new InvalidRequestException("maximum tags limit reached");
 
         return shop.save()
@@ -47,10 +47,7 @@ class ShopService {
         shop.setName(name)
         shop.setDescription(description)
 
-        def list = shop.tags.toArray()
-        list.each {
-            shop.removeFromTags(it)
-        }
+        shop.tags = []
 
         tags.each {
             shop.addToTags(tagService.fetchTagById(it))
@@ -62,7 +59,7 @@ class ShopService {
         shop = shop.save()
     }
 
-    public void deleteShop(Long shopId)  {
+    public void deleteShopById(Long shopId)  {
         Shop shop = fetchShopById(shopId)
 
         shop.delete()

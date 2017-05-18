@@ -10,7 +10,7 @@ class ShopController implements ErrorHandlingTrait {
     ShopService shopService
 
     def index() {
-        Integer offset = params.max ? Integer.parseInt(params.offset) : null
+        Integer offset = params.offset ? Integer.parseInt(params.offset) : null
         Integer max = params.max ? Integer.parseInt(params.max) : null
 
         List<Shop> shops = shopService.fetchAllShops(offset, max)
@@ -28,7 +28,7 @@ class ShopController implements ErrorHandlingTrait {
 
         Shop shop = shopService.createNewShop(name, description, tags)
 
-        respond(shop)
+        respond(shop, [status: HttpStatus.CREATED])
     }
 
     def view(Long shopId) {
@@ -49,7 +49,7 @@ class ShopController implements ErrorHandlingTrait {
 
     def delete(Long shopId) {
 
-        shopService.deleteShop(shopId)
+        shopService.deleteShopById(shopId)
 
         render(status: HttpStatus.NO_CONTENT)
     }
