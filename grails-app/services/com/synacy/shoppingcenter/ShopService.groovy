@@ -18,8 +18,12 @@ class ShopService implements ErrorHandler{
             if(!tag) {
                 throw new NoContentException("This tag does not exist.")
                 }else {
-                    shops = tagService.fetchAllShopsByTag(tag)
-                    return shops.list([offset: offset, max: max, sort: "id", order: "asc"])
+                    return Shop.createCriteria().list(max: max, offset: offset) {
+                        tags {
+                            eq('id', tag.id)
+                        }
+                        order('id', 'asc')
+                    }
                 }
         }else {
             return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
