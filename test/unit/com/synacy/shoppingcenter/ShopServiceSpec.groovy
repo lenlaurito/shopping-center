@@ -46,6 +46,7 @@ class ShopServiceSpec extends Specification {
         Shop shop3 = new Shop(name: "Shop 1", description: "Shop 1 description", location: Location.FIRST_FLOOR, tags: [tag3, tag2])
         shop1.save()
         shop2.save()
+        shop3.save()
 
         when:
         List<Shop> allShops = service.fetchAllShops(null, null, tag1.id)
