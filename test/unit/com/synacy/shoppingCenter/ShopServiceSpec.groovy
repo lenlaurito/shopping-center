@@ -10,7 +10,7 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(ShopService)
-@Mock([Shop])
+@Mock([Shop, Tag])
 class ShopServiceSpec extends Specification {
 
     TagService tagService = Mock()
@@ -53,7 +53,7 @@ class ShopServiceSpec extends Specification {
             NoContentFoundException exception = thrown()
     }
 
-    void "fetchAllShop should return list of all shops"(){
+    void "fetchShops should return list of all shops"(){
         given:
             Shop shop1 = new Shop(name: "Shop", description: "Description", location: 1, tags: [])
             Shop shop2 = new Shop(name: "Shop1", description: "Description1", location: 1, tags: [])
@@ -61,16 +61,49 @@ class ShopServiceSpec extends Specification {
             shop2.save()
 
         when:
-            List<Shop> fetchedShops = service.fetchAllShop()
+            List<Shop> fetchedShops = service.fetchShops(2, 0, null)
 
         then:
             fetchedShops.size() == 2
-            fetchedShops[0].id == shop1.id
-            fetchedShops[0].name == shop1.name
-            fetchedShops[0].description == shop1.description
-            fetchedShops[1].id == shop2.id
-            fetchedShops[1].name == shop2.name
-            fetchedShops[1].description == shop2.description
+            fetchedShops.contains(shop1)
+            fetchedShops.contains(shop2)
+    }
+
+    void "fetchShops should return list of all shops filtered by tag id"(){
+        given:
+            Long tagId = 1L
+
+            Tag tag1 = new Tag(name: "tag1")
+            Tag tag2 = new Tag(name: "tag2")
+            tag1.save()
+            tag2.save()
+
+            Shop shop1 = new Shop(name: "Shop", description: "Description", location: 1, tags: [tag1, tag2])
+            Shop shop2 = new Shop(name: "Shop1", description: "Description1", location: 1, tags: [tag2])
+            shop1.save()
+            shop2.save()
+
+            tagService.fetchTagById(tagId) >> tag1
+
+        when:
+            List<Shop> fetchedShops = service.fetchShops(2, 0, tagId)
+
+        then:
+            fetchedShops.size() == 1
+            fetchedShops[0] == shop1
+    }
+
+    void "fetchShops no tag found should throw NoContentFoundException"(){
+        given:
+            Long tagId = 1L
+
+            tagService.fetchTagById(tagId) >> null
+
+        when:
+            List<Shop> fetchedShops = service.fetchShops(2, 0, tagId)
+
+        then:
+            NoContentFoundException exception = thrown()
     }
 
     void "fetchAllShop should throw NoContentFoundException"(){
@@ -78,7 +111,7 @@ class ShopServiceSpec extends Specification {
             List<Shop> shopList = null
 
         when:
-            service.fetchAllShop()
+            service.fetchShops(2,0,1L)
 
         then:
             NoContentFoundException exception = thrown()
