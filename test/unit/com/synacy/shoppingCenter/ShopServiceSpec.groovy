@@ -65,8 +65,6 @@ class ShopServiceSpec extends Specification {
 
     void "fetchShops should return list of all shops filtered by tag id"(){
         given:
-            Long tagId = 1L
-
             Tag tag1 = new Tag(name: "tag1")
             Tag tag2 = new Tag(name: "tag2")
             tag1.save()
@@ -77,10 +75,10 @@ class ShopServiceSpec extends Specification {
             shop1.save()
             shop2.save()
 
-            tagService.fetchTagById(tagId) >> tag1
+            tagService.fetchTagById(1L) >> tag1
 
         when:
-            List<Shop> fetchedShops = service.fetchShops(2, 0, tagId)
+            List<Shop> fetchedShops = service.fetchShops(2, 0, 1L)
 
         then:
             fetchedShops.size() == 1
@@ -90,20 +88,16 @@ class ShopServiceSpec extends Specification {
     void "fetchShops no tag found should throw NoContentFoundException"(){
         given:
             Long tagId = 1L
-
             tagService.fetchTagById(tagId) >> null
 
         when:
-            List<Shop> fetchedShops = service.fetchShops(2, 0, tagId)
+            service.fetchShops(2, 0, tagId)
 
         then:
             NoContentFoundException exception = thrown()
     }
 
     void "fetchAllShop should throw NoContentFoundException"(){
-        given:
-            List<Shop> shopList = null
-
         when:
             service.fetchShops(2,0,1L)
 
@@ -129,7 +123,6 @@ class ShopServiceSpec extends Specification {
 
     void "updateShop should update the shops's information and save it"(){
         given:
-            Long shopId = 1L
             String shopName = "name"
             String shopDescription = "description"
             Integer shopLocation = 1
@@ -137,7 +130,7 @@ class ShopServiceSpec extends Specification {
             shop.save()
 
         when:
-            Shop updatedShop = service.updateShop(shopId, shopName, shopDescription,shopLocation,[])
+            Shop updatedShop = service.updateShop(1L, shopName, shopDescription,shopLocation,[])
 
         then:
             updatedShop.name == shopName

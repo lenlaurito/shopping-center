@@ -90,21 +90,18 @@ class TagControllerSpec extends Specification {
 
     void "updateTag name is null should throw InvalidDataPassed Exception"(){
         given:
-            Long tagId = 1L
             request.json = [name: null]
 
         when:
-            controller.updateTag(tagId)
+            controller.updateTag(1L)
 
         then:
             response.status == HttpStatus.NOT_ACCEPTABLE.value()
     }
 
     void "removeTag should remove the Tag with the given tagId"(){
-        given:
-            Long tagId = 1L
         when:
-            controller.removeTag(tagId)
+            controller.removeTag(1L)
 
         then:
             response.status == HttpStatus.NO_CONTENT.value()

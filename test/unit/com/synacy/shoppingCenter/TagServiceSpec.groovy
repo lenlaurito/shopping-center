@@ -27,11 +27,8 @@ class TagServiceSpec extends Specification {
     }
 
     void "fetchTagById no tag found should throw NoContentFoundException"(){
-        given:
-            Long id = 1L
-
-        when:
-            service.fetchTagById(id)
+         when:
+            service.fetchTagById(1L)
 
         then:
             NoContentFoundException exception = thrown()
