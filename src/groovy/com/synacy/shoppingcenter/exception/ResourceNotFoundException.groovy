@@ -1,4 +1,4 @@
-package com.synacy.shoppingcenter
+package com.synacy.shoppingcenter.exception
 
 class ResourceNotFoundException extends RuntimeException {
 

@@ -1,7 +1,8 @@
 package com.synacy.shoppingcenter.shop
 
 import org.springframework.http.HttpStatus
-import com.synacy.shoppingcenter.ResourceNotFoundException
+
+import com.synacy.shoppingcenter.exception.ResourceNotFoundException;
 
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor

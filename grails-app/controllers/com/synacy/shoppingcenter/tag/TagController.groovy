@@ -1,11 +1,14 @@
 package com.synacy.shoppingcenter.tag
 
-import com.synacy.shoppingcenter.InvalidRequestException
-import com.synacy.shoppingcenter.ResourceNotFoundException
+import com.synacy.shoppingcenter.exception.*;
+import com.synacy.shoppingcenter.exception.handler.DatabaseExceptionHandler;
+import com.synacy.shoppingcenter.exception.handler.ResourceExceptionHandler;
 
+import org.postgresql.util.PSQLException
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 
-class TagController {
+class TagController implements DatabaseExceptionHandler, ResourceExceptionHandler {
 
 	static responseFormats = ['json']
 
@@ -57,19 +60,13 @@ class TagController {
 
 	def removeTag(Long tagId) {
 		Tag tag = tagService.fetchTagById(tagId)
-		tagService.deleteTag(tag)
+		try {
+			tagService.deleteTag(tag)
+		} catch (DataIntegrityViolationException psqle) {
+			throw new ResourceConflictException("Tag id " + tagId + " is used by another shop.");
+		}
 
 		render(status: HttpStatus.NO_CONTENT)
-	}
-	
-	def handleResourceNotFoundException(ResourceNotFoundException e) {
-		response.status = HttpStatus.NOT_FOUND.value()
-		respond([error: e.getMessage()])
-	}
-
-	def handleInvalidRequestException(InvalidRequestException e) {
-		response.status = HttpStatus.UNPROCESSABLE_ENTITY.value()
-		respond([error: e.getMessage()])
 	}
 	
 }

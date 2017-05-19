@@ -1,12 +1,13 @@
 package com.synacy.shoppingcenter.shop
 
+import com.synacy.shoppingcenter.exception.*;
+import com.synacy.shoppingcenter.exception.handler.DatabaseExceptionHandler;
+import com.synacy.shoppingcenter.exception.handler.ResourceExceptionHandler
 import com.synacy.shoppingcenter.shop.ShopService
-import com.synacy.shoppingcenter.ResourceNotFoundException
-import com.synacy.shoppingcenter.InvalidRequestException
 
 import org.springframework.http.HttpStatus
 
-class ShopController {
+class ShopController implements DatabaseExceptionHandler, ResourceExceptionHandler {
 
 	static responseFormats = ['json']
 
@@ -65,16 +66,6 @@ class ShopController {
 		shopService.deleteShop(shop)
 
 		render(status: HttpStatus.NO_CONTENT)
-	}
-
-	def handleResourceNotFoundException(ResourceNotFoundException e) {
-		response.status = HttpStatus.NOT_FOUND.value()
-		respond([error: e.getMessage()])
-	}
-
-	def handleInvalidRequestException(InvalidRequestException e) {
-		response.status = HttpStatus.UNPROCESSABLE_ENTITY.value()
-		respond([error: e.getMessage()])
 	}
 	
 }

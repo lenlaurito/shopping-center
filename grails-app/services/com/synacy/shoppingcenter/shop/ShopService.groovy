@@ -1,7 +1,7 @@
 package com.synacy.shoppingcenter.shop
 
-import com.synacy.shoppingcenter.InvalidRequestException
-import com.synacy.shoppingcenter.ResourceNotFoundException
+import com.synacy.shoppingcenter.exception.InvalidRequestException;
+import com.synacy.shoppingcenter.exception.ResourceNotFoundException;
 import com.synacy.shoppingcenter.shop.Shop
 import com.synacy.shoppingcenter.tag.Tag
 import com.synacy.shoppingcenter.tag.TagService
