@@ -1,6 +1,6 @@
 package com.synacy.shoppingcenter.tag
 
-import com.synacy.shoppingcenter.ResourceNotFoundException
+import com.synacy.shoppingcenter.exception.ResourceNotFoundException;
 import com.synacy.shoppingcenter.tag.Tag
 
 import grails.transaction.Transactional
