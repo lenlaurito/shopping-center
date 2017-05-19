@@ -10,8 +10,8 @@ class ShopController implements ErrorHandlingTrait {
     ShopService shopService
 
     def index() {
-        Integer offset = params.offset ? Integer.parseInt(params.offset) : 0
-        Integer max = params.max ? Integer.parseInt(params.max) : 20
+        Integer offset = params.offset ? Integer.parseInt(params.offset) : ShopService.DEFAULT_PAGINATION_OFFSET
+        Integer max = params.max ? Integer.parseInt(params.max) : ShopService.DEFAULT_PAGINATION_MAX
         String tagName = params.tagName ?: ""
 
         List<Shop> shops = shopService.fetchAllShops(offset, max, tagName)
@@ -25,7 +25,7 @@ class ShopController implements ErrorHandlingTrait {
     def create() {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
-        List<Long> tags = request.JSON.tags ?: null
+        List<Long> tags = request.JSON.tags ?: []
 
         def tmp = request.JSON.locations ?: []
 

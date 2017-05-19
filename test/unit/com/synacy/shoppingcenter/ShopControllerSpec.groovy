@@ -22,6 +22,10 @@ class ShopControllerSpec extends Specification {
 
     void "index should respond with all the shops"() {
         given:
+        Integer offset = ShopService.DEFAULT_PAGINATION_OFFSET
+        Integer max = ShopService.DEFAULT_PAGINATION_MAX
+        String tagName = ''
+
 
         Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton")
         Shop shop2 = new Shop(name: "shop 2", description: "shop 2 descripiton")
@@ -31,7 +35,7 @@ class ShopControllerSpec extends Specification {
         controller.index()
 
         then:
-        1 * shopService.fetchAllShops(null, null) >> [shop1, shop2]
+        1 * shopService.fetchAllShops(offset, max, tagName) >> [shop1, shop2]
         1 * shopService.fetchTotalNumberOfShops() >> 2
 
         then:
@@ -48,11 +52,10 @@ class ShopControllerSpec extends Specification {
     void "index paginated should_respond with paginated the shops"() {
         given:
 
-        String offset = "0"
-        String max = "1"
+        String tagName = ''
 
-        params.offset = offset
-        params.max = max
+        params.offset = "0"
+        params.max = "1"
 
         Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton")
         Shop shop2 = new Shop(name: "shop 2", description: "shop 2 descripiton")
@@ -61,7 +64,7 @@ class ShopControllerSpec extends Specification {
         controller.index()
 
         then:
-        1 * shopService.fetchAllShops(0, 1) >> [shop1]
+        1 * shopService.fetchAllShops(0, 1, '') >> [shop1]
         1 * shopService.fetchTotalNumberOfShops() >> 2
 
         then:
@@ -76,7 +79,8 @@ class ShopControllerSpec extends Specification {
         given:
         String name = "sample"
         String description = "sample"
-        List<Long> tags = null
+        List<Long> tags = []
+        List<Location> locations = []
 
         request.json = [name: name, description: description]
 
@@ -86,22 +90,22 @@ class ShopControllerSpec extends Specification {
         controller.create()
 
         then:
-        1 * shopService.createNewShop(name, description, null) >> shop
+        1 * shopService.createNewShop(name, description, tags, locations) >> shop
 
         then:
         response.status == HttpStatus.CREATED.value()
         response.json.name == name
         response.json.description == description
-        response.json.tags ?: null == tags
+        response.json.tags ?: null == null
+        response.json.locations ?: null == null
     }
 
-    void "create with tags should respond with new created shop with related tags"() {
+    void "create with tags and location should respond with new created shop with related tags and location"() {
         given:
         String name = "sample"
         String description = "sample"
-        List<Long> tagIds = [1]
 
-        request.json = [name: name, description: description, tags: tagIds]
+        request.json = [name: name, description: description, tags: [1], locations: ["FIRST_FLOOR"]]
 
         Shop shop = new Shop(name: name, description: description)
 
@@ -110,12 +114,13 @@ class ShopControllerSpec extends Specification {
 
         List<Tag> tags = [tag1, tag2]
         shop.tags = tags
+        shop.locations = [Location.FIRST_FLOOR]
 
         when:
         controller.create()
 
         then:
-        1 * shopService.createNewShop(name, description, tagIds) >> shop
+        1 * shopService.createNewShop(name, description, [1], [Location.FIRST_FLOOR]) >> shop
 
         then:
         response.status == HttpStatus.CREATED.value()
@@ -125,6 +130,8 @@ class ShopControllerSpec extends Specification {
         response.json.tags.get(0).name == tags.get(0).name
         response.json.tags.get(1).id ?: null == tags.get(1).id
         response.json.tags.get(1).name == tags.get(1).name
+        response.json.locations.length() == 1
+        response.json.locations.get(0).name == "FIRST_FLOOR"
     }
 
     void "view should find existing shop by id"() {

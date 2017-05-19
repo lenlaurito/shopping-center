@@ -1,6 +1,7 @@
 package com.synacy.shoppingcenter
 
 import org.springframework.http.HttpStatus
+import org.springframework.dao.DataIntegrityViolationException
 
 class TagController implements ErrorHandlingTrait {
 
@@ -31,8 +32,11 @@ class TagController implements ErrorHandlingTrait {
     }
 
     def delete(Long tagId) {
-        tagService.deleteTagById(tagId)
-
+        try {
+            tagService.deleteTagById(tagId)
+        } catch (DataIntegrityViolationException e) {
+            throw new InvalidRequestException("Referential integrity error. This tag is still being used by shops")
+        }
 
         render(status: HttpStatus.NO_CONTENT)
     }

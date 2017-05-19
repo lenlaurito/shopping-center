@@ -10,7 +10,7 @@ class UrlMappings {
         "/api/v1/tag"(controller: "tag") {
             action = [GET: "index", POST: "create"]
         }
-        "/api/v1/tag/${shopId}"(controller: "tag") {
+        "/api/v1/tag/${tagId}"(controller: "tag") {
             action = [GET: "view", PUT: "update", DELETE: "delete"]
         }
 
