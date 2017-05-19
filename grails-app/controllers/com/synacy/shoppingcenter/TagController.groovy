@@ -1,6 +1,7 @@
 package com.synacy.shoppingcenter
 
 import org.springframework.http.HttpStatus
+import com.synacy.shoppingcenter.ExceptionHandlingTrait
 
 import com.synacy.shoppingcenter.exceptions.*
 
@@ -13,10 +14,6 @@ class TagController implements ExceptionHandlingTrait {
 
     def fetchAllTags() {
         List<Tag> tags = tagService.fetchAllTags()
-
-        if(tags.isEmpty()) {
-            throw new ResourceNotFoundException("No existing Tag found.")
-        }
 
         respond(tags)
     }
@@ -55,7 +52,7 @@ class TagController implements ExceptionHandlingTrait {
         Tag tag = tagService.fetchTagById(tagId)
 
         if(tag == null) {
-            throw new ResourceNotFoundException("Tag not found.")
+            return render([status: HttpStatus.NO_CONTENT])
         }
 
         if(!tag.shops.isEmpty()) {

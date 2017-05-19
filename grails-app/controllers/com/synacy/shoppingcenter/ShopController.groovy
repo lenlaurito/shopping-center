@@ -3,6 +3,7 @@ package com.synacy.shoppingcenter
 import org.springframework.http.HttpStatus
 import com.synacy.shoppingcenter.exceptions.*
 import com.synacy.shoppingcenter.Location
+import com.synacy.shoppingcenter.ExceptionHandlingTrait
 
 import javax.naming.LimitExceededException
 
@@ -20,10 +21,6 @@ class ShopController implements ExceptionHandlingTrait {
 
         List<Shop> shops = shopService.fetchAllShops(offset, max, tagId)
         Integer shopCount = shopService.fetchTotalNumberOfShops()
-
-        if(shopCount == 0) {
-            throw new ResourceNotFoundException("No existing shop found")
-        }
 
         Map<String, Object> paginatedShopDetails = [totalRecords: shopCount, records: shops]
 
@@ -44,7 +41,7 @@ class ShopController implements ExceptionHandlingTrait {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
         String locationString = request.JSON.location ?: null
-        List tagIds = request.JSON.tags as List ?: null
+        List tagIds = request.JSON.tagId as List ?: []
 
         Location location = Location.valueOfLocation(locationString)
         if(location == null) {
@@ -97,7 +94,7 @@ class ShopController implements ExceptionHandlingTrait {
         Shop shop = shopService.fetchShopById(shopId)
 
         if(!shop) {
-            throw new ResourceNotFoundException("Shop not found")
+            return render(status: HttpStatus.NO_CONTENT)
         }
 
         shopService.deleteShop(shop)
