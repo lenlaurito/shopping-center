@@ -23,6 +23,7 @@ class TagService {
 	public Tag createNewTag(String name) {
 		Tag tag = new Tag()
 		tag.name = name
+		tag.shops = []
 		return tag.save()
 	}
 
@@ -37,6 +38,10 @@ class TagService {
 	
 	public Integer fetchTotalNumberOfTags() {
 		return Tag.count()
+	}
+	
+	public hasDuplicates(String name) {
+		return Tag.countByName(name) > 0
 	}
 	
 	public Integer fetchTotalNumberOfTagsByName(String name) {

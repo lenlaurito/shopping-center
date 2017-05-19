@@ -54,7 +54,26 @@ class ShopServiceSpec extends Specification {
 		Shop.exists(createdShop.id)
 	}
 	
-	void "deleteShop should delete shop"() {
+	void "updateShop should update existing shop with the specified details"() {
+		given:
+		Shop shopToUpdate = new Shop(name: "Jollibee", description: "Bida ang saya.", location: Location.FIRST_FLOOR, tags: [])
+		shopToUpdate.save()
+
+		def name = "Adobe Photoshop"
+		def description = "I-photoshop mo"
+		Location location = Location.SECOND_FLOOR
+		def tags = []
+		when:
+		Shop updatedShop = service.fetchShopById(shopToUpdate, name, description, location, tags)
+
+		then:
+		updatedShop.name == name
+		updatedShop.description == description
+		updatedShop.location == location
+		updatedShop.tags as List == tags
+	}
+	
+	void "deleteShop should delete an existing shop"() {
 		given:
 		String name = "Jollibee"
 		String description = "Bida ang saya."

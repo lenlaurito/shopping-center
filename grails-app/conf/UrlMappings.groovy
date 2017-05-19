@@ -14,11 +14,11 @@ class UrlMappings {
             action = [GET: "fetchAllShops", POST: "createShop"]
         }
         "/api/v1/shop/${shopId}"(controller: "shop") {
-            action = [GET: "fetchShopId", PUT: "updateShop", DELETE: "removeShop"]
+            action = [GET: "fetchShop", PUT: "updateShop", DELETE: "removeShop"]
         }
 
         "/"(view: "/index")
         "500"(view: '/error')
-	}
+	} 
 
 }

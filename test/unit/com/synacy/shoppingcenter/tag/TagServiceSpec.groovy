@@ -1,5 +1,6 @@
 package com.synacy.shoppingcenter.tag
 
+//import grails.test.mixin.Build
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -9,13 +10,8 @@ import spock.lang.Specification
  */
 @TestFor(TagService)
 @Mock([Tag])
+//@Build([Tag])
 class TagServiceSpec extends Specification {
-
-	def setup() {
-	}
-
-	def cleanup() {
-	}
 
 	void "fetchById should return the tag with the given id"() {
 		given:
@@ -29,6 +25,22 @@ class TagServiceSpec extends Specification {
 		fetchedTag.id == tag.id
 		fetchedTag.name == tag.name
 	}
+	
+	void "fetchAllTags should return all tags"() {
+		given:
+		Tag tag1 = new Tag(id: 1L, name: "Specialty").save()
+		Tag tag2 = new Tag(id: 2L, name: "Restaurant").save()
+		Tag tag3 = new Tag(id: 3L, name: "Bakeshop").save()
+
+		when:
+		List<Tag> fetchedTags = service.fetchAllTags()
+
+		then:
+		fetchedTags.size() == 3
+		fetchedTags.get(0) == tag1
+		fetchedTags.get(1) == tag2
+		fetchedTags.get(2) == tag3
+	}
 
 	void "createNewTag should create and return the new tag with the correct details"() {
 		given:
@@ -41,6 +53,19 @@ class TagServiceSpec extends Specification {
 		then:
 		createdTag.name == name
 		Tag.exists(createdTag.id)
+	}
+	
+	void "updateTag should update the existing Tag with corresponding details"() {
+		given:
+		Tag tagToUpdate = new Tag(name: "Jollibee")
+		tagToUpdate.save()
+		String changedName = "McDonalds"
+
+		when:
+		Tag updatedTag = service.updateTag(tagToUpdate, changedName)
+
+		then:
+		updatedTag.name == changedName
 	}
 	
 	void "deleteTag should delete tag"() {

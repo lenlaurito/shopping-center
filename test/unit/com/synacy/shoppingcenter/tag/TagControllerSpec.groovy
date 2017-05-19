@@ -54,13 +54,12 @@ class TagControllerSpec extends Specification {
 	void "createTag should respond with the newly created tag with the details specified"() {
 		given:
 		String name = "Restaurant"
-
 		request.json = [name: name]
-
+		
 		Tag tag = new Tag(name: name)
 		
-//		Tag.countByName(name) >> 1
-
+		tagService.hasDuplicates(name) >> false
+		
 		when:
 		controller.createTag()
 
@@ -72,8 +71,6 @@ class TagControllerSpec extends Specification {
 		response.json.name == name
 	}
 	
-	
-	
 	void "updateTag should respond with the updated tag for the given details"() {
 		given:
 		Long tagId = 2L
@@ -82,7 +79,9 @@ class TagControllerSpec extends Specification {
 		request.json = [name: name]
 
 		Tag tagToUpdate = new Tag(name: name)
+		
 		tagService.fetchTagById(tagId) >> tagToUpdate
+		tagService.hasDuplicates(name) >> false
 
 		when:
 		controller.updateTag(tagId)

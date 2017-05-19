@@ -21,7 +21,7 @@ class ShopService {
 		return shop
 	}
 
-	public List<Shop> fetchShops(Integer tagId, Integer offset, Integer max) {
+	public List<Shop> fetchShops(Long tagId, Integer offset, Integer max) {
 		if(tagId) {
 			def tag = tagService.fetchTagById(tagId)
             return Shop.createCriteria().list(offset: offset, max: max) {

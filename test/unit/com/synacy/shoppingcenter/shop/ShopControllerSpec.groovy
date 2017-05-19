@@ -1,7 +1,5 @@
 package com.synacy.shoppingcenter.shop
 
-import grails.test.mixin.*
-
 import org.springframework.http.HttpStatus
 
 import spock.lang.Specification
@@ -26,7 +24,7 @@ class ShopControllerSpec extends Specification {
 		shopService.fetchShopById(shopId) >> shop
 
 		when:
-		controller.fetchShopId(shopId)
+		controller.fetchShop(shopId)
 
 		then:
 		response.status == HttpStatus.OK.value()
@@ -34,8 +32,20 @@ class ShopControllerSpec extends Specification {
 		response.json.description == "Bida ang saya!"
 		response.json.location.name == Location.FIRST_FLOOR.name()
 	}
+	
+	void "fetchShop should respond not found status is id id not found"() {
+		given:
+		Long shopId = 2L
+		shopService.fetchShopById(shopId) >> null
 
-	void "fetchAllShops with not parameters should respond with the correct shop"() {
+		when:
+		controller.fetchShop(shopId)
+
+		then:
+		response.status == HttpStatus.NOT_FOUND.value()
+	}
+
+	void "fetchAllShops with null parameters should respond with the correct shop"() {
 		given:
 		Shop shop1 = new Shop(id: 1L, name: "Jollibee", description: "Bida ang saya!", location: Location.FIRST_FLOOR, tags: [])
 		Shop shop2 = new Shop(id: 2L, name: "McDonalds", description: "Love ko to", location: Location.FIRST_FLOOR, tags: [])
@@ -47,6 +57,34 @@ class ShopControllerSpec extends Specification {
 		then:
 		response.status == HttpStatus.OK.value()
 		response.json.size() == 2
+		response.json.shops.find {
+			it.name == "Jollibee" && it.description == "Bida ang saya!" && it.location.name == Location.FIRST_FLOOR.name()
+		} != null
+		response.json.shops.find {
+			it.name == "McDonalds" && it.description == "Love ko to" && it.location.name == Location.FIRST_FLOOR.name()
+		} != null
+	}
+	
+	void "fetchAllShops with specified parameters should respond with the correct shop"() {
+		given:
+		params.tagId = "1"
+		params.offset = "0"
+		params.max = "3"
+
+		Long tagId = Long.parseLong(params.tagId)
+		Integer offset = Integer.parseInt(params.offset)
+		Integer max = Integer.parseInt(params.max)
+		Shop shop1 = new Shop(id: 1L, name: "Jollibee", description: "Bida ang saya!", location: Location.FIRST_FLOOR, tags: [])
+		Shop shop2 = new Shop(id: 2L, name: "McDonalds", description: "Love ko to", location: Location.FIRST_FLOOR, tags: [])
+
+		shopService.fetchShops(tagId, offset, max) >> [shop1, shop2]
+
+		when:
+		controller.fetchAllShops()
+
+		then:
+		response.status == HttpStatus.OK.value()
+		response.json.shops.size() == 2
 		response.json.shops.find {
 			it.name == "Jollibee" && it.description == "Bida ang saya!" && it.location.name == Location.FIRST_FLOOR.name()
 		} != null
@@ -79,7 +117,7 @@ class ShopControllerSpec extends Specification {
 		response.json.location.name == location.name()
 	}
 	
-	void "createShop should respond throw an InvalidRequestException if name is null"() {
+	void "createShop should respond a status unprocessable entity if name is null"() {
 		given:
 		String description = "Bida ang saya."
 		def tags = []

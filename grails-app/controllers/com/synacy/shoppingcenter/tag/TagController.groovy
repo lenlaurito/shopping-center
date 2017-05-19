@@ -30,8 +30,7 @@ class TagController {
 			throw new InvalidRequestException("Name should not be empty.")
 		}
 		
-		Integer tagCountByName = tagService.fetchTotalNumberOfTagsByName()
-		if (tagCountByName > 0) {
+		if (tagService.hasDuplicates(name)) {
 			throw new InvalidRequestException("Existing tag with name '" + name + "' already existed.")
 		}
 		Tag tag = tagService.createNewTag(name)
@@ -49,9 +48,9 @@ class TagController {
 		if (!tag) {
 			throw new ResourceNotFoundException("Tag with id " + tagId + " not found")
 		}
-//		if (Tag.countByName(name) > 0) {
-//			throw new InvalidRequestException("Beware of duplication.")
-//		}
+		if (tagService.hasDuplicates(name)) {
+			throw new InvalidRequestException("Existing tag with name '" + name + "' already existed.")
+		}
 		tag = tagService.updateTag(tag, name)
 		respond(tag)
 	}
@@ -62,7 +61,7 @@ class TagController {
 
 		render(status: HttpStatus.NO_CONTENT)
 	}
-
+	
 	def handleResourceNotFoundException(ResourceNotFoundException e) {
 		response.status = HttpStatus.NOT_FOUND.value()
 		respond([error: e.getMessage()])
