@@ -40,17 +40,6 @@ class TagControllerSpec extends Specification {
         } != null
     }
 
-    void "fetchAllTags should throw ResourceNotFoundException if no existing Tag is found"() {
-        given:
-        tagService.fetchAllTags() >> []
-
-        when:
-        controller.fetchAllTags()
-
-        then:
-        response.status == HttpStatus.NOT_FOUND.value()
-    }
-
     void "createTag should respond the newly created Tag with the specified details"() {
         given:
         String name = "Tag 1"
@@ -125,19 +114,6 @@ class TagControllerSpec extends Specification {
         response.status == HttpStatus.NO_CONTENT.value()
     }
 
-    void "removeTag should throw ResourceNotFoundException if no existing Tag is found with the given id"() {
-        given:
-        Long tagId = 100L
-
-        tagService.fetchTagById(tagId) >> null
-
-        when:
-        controller.removeTag(tagId)
-
-        then:
-        response.status == HttpStatus.NOT_FOUND.value()
-    }
-
     void "removeTag should throw ExistingResourceException if tag is still used by a shop"() {
         given:
         Long tagId = 100L
@@ -152,7 +128,7 @@ class TagControllerSpec extends Specification {
         controller.removeTag(tagId)
 
         then:
-        response.status == HttpStatus.CONFLICT.value()
+        response.status == HttpStatus.BAD_REQUEST.value()
     }
 
 }
