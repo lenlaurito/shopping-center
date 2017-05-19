@@ -36,6 +36,26 @@ class ShopServiceSpec extends Specification {
 		then:
 		thrown ResourceNotFoundException
 	}
+	
+	void "fetchShops should return all shops with null tag id"() {
+		given:
+		Long tagId = null
+		Integer offset = 0
+		Integer max = 3
+		
+		Shop shop1 = new Shop(name: "Jollibee", description: "Bida ang saya.", location: "FIRST_FLOOR").save()
+		Shop shop2 = new Shop(name: "McDonalds", description: "Love ko to.", location: "SECOND_FLOOR").save()
+		Shop shop3 = new Shop(name: "KFC", description: "Kapag fried chicken.", location: "FIRST_FLOOR").save()
+
+		when:
+		List<Shop> fetchedShops = service.fetchShops(tagId, offset, max)
+
+		then:
+		fetchedShops.size() == 3
+		fetchedShops.get(0) == shop1
+		fetchedShops.get(1) == shop2
+		fetchedShops.get(2) == shop3
+	}
 
 	void "createNewShop should create and return the new shop with the correct details"() {
 		given:
@@ -63,8 +83,9 @@ class ShopServiceSpec extends Specification {
 		def description = "I-photoshop mo"
 		Location location = Location.SECOND_FLOOR
 		def tags = []
+		
 		when:
-		Shop updatedShop = service.fetchShopById(shopToUpdate, name, description, location, tags)
+		Shop updatedShop = service.updateShop(shopToUpdate, name, description, location, tags)
 
 		then:
 		updatedShop.name == name

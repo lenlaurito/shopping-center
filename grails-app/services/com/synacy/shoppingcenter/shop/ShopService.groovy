@@ -53,7 +53,6 @@ class ShopService {
 		shop.name = name
 		shop.description = description
 		shop.location = location
-		//shop.tags = tags
 		if (tags) {
 			if (tags.size() > 5) {
 				throw new InvalidRequestException("Could not tag a shop more than 5 times.")

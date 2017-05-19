@@ -33,13 +33,10 @@ class ShopController {
 		String description = request.JSON.description ?: null
 		String locationString = request.JSON.location ?: null
 		List tags = request.JSON.tags
-
 		Location location = Location.valueOfLocation(locationString)
 		
-		// test not in enum location
-		
 		if (!name || !location) {
-			throw new InvalidRequestException("Invalid request.")
+			throw new InvalidRequestException("Request is invalid.")
 		}
 
 		Shop shop = shopService.createNewShop(name, description, location, tags)
@@ -52,11 +49,10 @@ class ShopController {
 		String description = request.JSON.description ?: null
 		String locationString = request.JSON.location ?: null
 		List tags = request.JSON.tags
-		
 		Location location = Location.valueOfLocation(locationString)
-
-		if (!name) {
-			throw new InvalidRequestException("Invalid request.")
+		
+		if (!name || !location) {
+			throw new InvalidRequestException("Request is invalid.")
 		}
 		
 		Shop shop = shopService.fetchShopById(shopId)
