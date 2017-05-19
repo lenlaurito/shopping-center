@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter
 
+import com.synacy.shoppingCenter.exception.DataConflictException
 import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
 import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.transaction.Transactional
@@ -41,6 +42,7 @@ class TagService{
 
     void deleteTag(Long tagId){
         Tag tagToBeDeleted = fetchTagById(tagId)
+        if(tagToBeDeleted.shops){throw new DataConflictException("Tag still in use")}
         tagToBeDeleted.delete()
     }
 

@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter
 
+import com.synacy.shoppingCenter.exception.DataConflictException
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
 import com.synacy.shoppingCenter.trait.ExceptionHandlerTrait
 import org.springframework.http.HttpStatus

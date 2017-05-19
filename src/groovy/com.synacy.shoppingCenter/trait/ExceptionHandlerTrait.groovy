@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter.trait
 
+import com.synacy.shoppingCenter.exception.DataConflictException
 import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
 import com.synacy.shoppingCenter.exception.NoContentFoundException
@@ -21,6 +22,11 @@ trait ExceptionHandlerTrait {
 
     def handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
         response.status = HttpStatus.NOT_ACCEPTABLE.value()
+        respond([error: e.getMessage()])
+    }
+
+    def handleDataConflictException(DataConflictException e) {
+        response.status = HttpStatus.METHOD_NOT_ALLOWED.value()
         respond([error: e.getMessage()])
     }
 }

@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter
 
+import com.synacy.shoppingCenter.exception.DataConflictException
 import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
 import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.test.mixin.Mock
@@ -10,7 +11,7 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(TagService)
-@Mock([Tag])
+@Mock([Tag, Shop])
 class TagServiceSpec extends Specification {
 
     void "fetchTagById should return the tag with the given id"(){
@@ -115,16 +116,19 @@ class TagServiceSpec extends Specification {
             EntityAlreadyExistsException exception = thrown()
     }
 
-    void "deleteTag should delete the tag with the given id"(){
+    void "deleteTag should throw DataConflictException"(){
         given:
-            Tag tag = new Tag(name: "Jewelry")
-            service.fetchTagById(tag.id) >> tag
+            Shop shop = new Shop(name: "Shop1", description: "Description1", location: 1)
+            Set shops = [shop]
+            Tag tag = new Tag(name: "Jewelry", shops: shops)
             tag.save()
+            shop.save()
+            service.fetchTagById(tag.id) >> tag
 
         when:
             service.deleteTag(tag.id)
 
         then:
-            !Tag.exists(tag.id)
+            DataConflictException exception = thrown()
     }
 }
