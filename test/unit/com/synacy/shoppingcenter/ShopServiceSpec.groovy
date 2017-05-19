@@ -28,8 +28,8 @@ class ShopServiceSpec extends Specification {
 
         then:
         allShops.size() == 2
-        allShops.get(0) == shop1
-        allShops.get(1) == shop2
+        allShops.contains(shop1)
+        allShops.contains(shop2)
     }
 
     void "fetchAllShops should return all Shops filtered by tag id"() {
@@ -53,8 +53,8 @@ class ShopServiceSpec extends Specification {
 
         then:
         allShops.size() == 2
-        allShops.get(0) == shop1
-        allShops.get(1) == shop2
+        allShops.contains(shop1)
+        allShops.contains(shop2)
     }
 
     void "fetchShopById should return the Shop with the specified id"() {

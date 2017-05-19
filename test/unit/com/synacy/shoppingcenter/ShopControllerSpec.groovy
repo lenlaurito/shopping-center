@@ -105,7 +105,7 @@ class ShopControllerSpec extends Specification {
         String locationString = "First Floor"
         Location location = Location.valueOfLocation(locationString)
 
-        request.json = [name: name, description: description, location: locationString, tags: tagIds]
+        request.json = [name: name, description: description, location: locationString, tagId: tagIds]
 
         Shop shop = new Shop(name: name, description: description, location: location, tags: tags)
 
@@ -162,12 +162,11 @@ class ShopControllerSpec extends Specification {
         Tag tag5 = new Tag(name: "fifth tag")
         Tag tag6 = new Tag(name: "sixth tag")
 
-        List<Tag> tags = [tag1, tag2, tag3, tag4, tag5, tag6]
         List tagIds = [100L, 200L, 300L, 400L, 500L, 600L]
 
         String locationString = "First floor"
 
-        request.json = [name: name, description: description, location: locationString, tags: tagIds]
+        request.json = [name: name, description: description, location: locationString, tagId: tagIds]
 
         when:
         controller.createShop()
@@ -191,19 +190,6 @@ class ShopControllerSpec extends Specification {
 
         then:
         response.status == HttpStatus.NO_CONTENT.value()
-    }
-
-    void "removeShop should throw ResourceNotFoundException if shop does not exist"() {
-        given:
-        Long shopId = 100L
-
-        shopService.fetchShopById(shopId) >> null
-
-        when:
-        controller.removeShop(shopId)
-
-        then:
-        response.status == HttpStatus.NOT_FOUND.value()
     }
 
     void "updateShop should update the Shop which has the specified id"() {
