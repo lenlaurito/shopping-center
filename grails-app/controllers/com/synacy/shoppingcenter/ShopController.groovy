@@ -6,7 +6,7 @@ import com.synacy.shoppingcenter.Location
 
 import javax.naming.LimitExceededException
 
-class ShopController {
+class ShopController implements ExceptionHandlingTrait {
 
     static responseFormats = ['json']
 
@@ -104,21 +104,4 @@ class ShopController {
 
         render(status: HttpStatus.NO_CONTENT)
     }
-
-    def handleResourceNotFoundException(ResourceNotFoundException e) {
-        response.status = HttpStatus.NOT_FOUND.value()
-        respond([error: e.getMessage()])
-    }
-
-    def handleInvalidLocationException(InvalidLocationException e) {
-        response.status = HttpStatus.NOT_FOUND.value()
-        respond([error: e.getMessage()])
-    }
-
-    def handleLimitExceedException(LimitExceededException e) {
-        response.status = HttpStatus.BAD_REQUEST.value()
-        respond([error: e.getMessage()])
-    }
-
-
 }

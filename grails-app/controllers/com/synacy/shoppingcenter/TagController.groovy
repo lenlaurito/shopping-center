@@ -2,11 +2,10 @@ package com.synacy.shoppingcenter
 
 import org.springframework.http.HttpStatus
 
-import grails.validation.ValidationException
 import com.synacy.shoppingcenter.exceptions.*
 
 
-class TagController {
+class TagController implements ExceptionHandlingTrait {
 
     TagService tagService
 
@@ -65,21 +64,6 @@ class TagController {
 
         tagService.deleteTag(tag)
         render([status: HttpStatus.NO_CONTENT])
-    }
-
-    def handleValidationException(ValidationException e) {
-        response.status = HttpStatus.CONFLICT.value()
-        respond([error: "Tag name already exist"])
-    }
-
-    def handleResourceNotFoundException(ResourceNotFoundException e) {
-        response.status = HttpStatus.NOT_FOUND.value()
-        respond([error: e.getMessage()])
-    }
-
-    def handleExistingResourceException(ExistingResourceException e) {
-        response.status = HttpStatus.CONFLICT.value()
-        respond([error: e.getMessage()])
     }
 
 
