@@ -19,7 +19,7 @@ class TagController {
 	def fetchAllTags() {
 		List<Tag> tags = tagService.fetchAllTags()
 		Integer tagCount = tagService.fetchTotalNumberOfTags()
-		Map<String, Object> tagDetails = [totalRecords: tagCount, tags: tags]
+		Map<String, Object> tagDetails = [totalTags: tagCount, tags: tags]
 		respond(tagDetails)
 	}
 
