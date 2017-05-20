@@ -10,9 +10,9 @@ import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-@TestFor(TagService)
+@TestFor(TagServiceImpl)
 @Mock([Tag, Shop])
-class TagServiceSpec extends Specification {
+class TagServiceImplSpec extends Specification {
 
     void "fetchTagById should return the tag with the given id"(){
         given:

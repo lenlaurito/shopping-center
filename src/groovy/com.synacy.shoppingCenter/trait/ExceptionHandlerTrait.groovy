@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus
 trait ExceptionHandlerTrait {
 
     def handleInvalidDataPassed(InvalidDataPassed e) {
-        response.status = HttpStatus.NOT_ACCEPTABLE.value()
+        response.status = HttpStatus.BAD_REQUEST.value()
         respond([error: e.getMessage()])
     }
 
@@ -21,12 +21,12 @@ trait ExceptionHandlerTrait {
     }
 
     def handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
-        response.status = HttpStatus.NOT_ACCEPTABLE.value()
+        response.status = HttpStatus.FORBIDDEN.value()
         respond([error: e.getMessage()])
     }
 
     def handleDataConflictException(DataConflictException e) {
-        response.status = HttpStatus.METHOD_NOT_ALLOWED.value()
+        response.status = HttpStatus.FORBIDDEN.value()
         respond([error: e.getMessage()])
     }
 }

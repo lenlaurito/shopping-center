@@ -1,6 +1,5 @@
 package com.synacy.shoppingCenter
 
-import com.synacy.shoppingCenter.exception.DataConflictException
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
 import com.synacy.shoppingCenter.trait.ExceptionHandlerTrait
 import org.springframework.http.HttpStatus
@@ -9,21 +8,21 @@ class TagController implements ExceptionHandlerTrait{
 
     static responseFormats = ['json']
 
-    TagService tagService
+    TagServiceImpl tagServiceImpl
 
     def fetchTag(Long tagId){
-        respond(tagService.fetchTagById(tagId))
+        respond(tagServiceImpl.fetchTagById(tagId))
     }
 
     def fetchAllTag(){
-        respond(tagService.fetchAllTag())
+        respond(tagServiceImpl.fetchAllTag())
     }
 
     def createTag(){
         String name = request.JSON.name ?: null
         if(!name) { throw new InvalidDataPassed("Tag name in not nullable")}
 
-        Tag tag = tagService.createTag(name)
+        Tag tag = tagServiceImpl.createTag(name)
         respond(tag, status: HttpStatus.CREATED)
     }
 
@@ -31,12 +30,12 @@ class TagController implements ExceptionHandlerTrait{
         String name = request.JSON.name ?: null
         if(!name) { throw new InvalidDataPassed("Tag name in not nullable")}
 
-        Tag tag = tagService.updateTag(tagId,name)
+        Tag tag = tagServiceImpl.updateTag(tagId,name)
         respond(tag)
     }
 
     def removeTag(Long tagId){
-        tagService.deleteTag(tagId)
+        tagServiceImpl.deleteTag(tagId)
         render(status: HttpStatus.NO_CONTENT)
     }
 

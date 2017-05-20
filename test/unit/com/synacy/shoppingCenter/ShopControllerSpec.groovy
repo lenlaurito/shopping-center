@@ -10,17 +10,17 @@ import spock.lang.Specification
 @TestFor(ShopController)
 class ShopControllerSpec extends Specification {
 
-    ShopService shopService = Mock()
+    ShopServiceImpl shopServiceImpl = Mock()
 
     def setup() {
-        controller.shopService = shopService
+        controller.shopService = shopServiceImpl
     }
 
     void "fetchShop should respond with the Shop with the given id"(){
         given:
             Long shopId = 1L
             Shop shop = new Shop(name: "shopName", description: "shopDescription", location: 1, tags: [])
-            shopService.fetchShopById(shopId) >> shop
+            shopServiceImpl.fetchShopById(shopId) >> shop
 
         when:
             controller.fetchShop(shopId)
@@ -47,8 +47,8 @@ class ShopControllerSpec extends Specification {
             Integer max = Integer.parseInt(params.max)
             Long tagId = Long.parseLong(params.tagId)
 
-            shopService.fetchShops(max, offset, tagId) >> shopList
-            shopService.fetchTotalNumberOfShops() >> 2
+            shopServiceImpl.fetchShops(max, offset, tagId) >> shopList
+            shopServiceImpl.fetchTotalNumberOfShops() >> 2
 
         when:
             controller.fetchAllShop()
@@ -74,7 +74,7 @@ class ShopControllerSpec extends Specification {
         when:
             controller.createShop()
         then:
-            1 * shopService.createShop(name, description, location, tagIds) >> shop
+            1 * shopServiceImpl.createShop(name, description, location, tagIds) >> shop
         then:
             response.status == HttpStatus.CREATED.value()
             response.json.name == shop.name
@@ -109,7 +109,7 @@ class ShopControllerSpec extends Specification {
             request.json = [name: shopName, description: shopDescription, location: location, tagIds: tagIds]
 
             Shop shop = new Shop(name: shopName, description: shopDescription, location: location, tagIds: tagIds)
-            shopService.updateShop(shopId, shopName, shopDescription, location, tagIds) >> shop
+            shopServiceImpl.updateShop(shopId, shopName, shopDescription, location, tagIds) >> shop
 
         when:
             controller.updateShop(shopId)

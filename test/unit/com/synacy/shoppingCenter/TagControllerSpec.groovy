@@ -10,17 +10,17 @@ import spock.lang.Specification
 @TestFor(TagController)
 class TagControllerSpec extends Specification {
 
-    TagService tagService = Mock()
+    TagServiceImpl tagServiceImpl = Mock()
 
     def setup() {
-        controller.tagService = tagService
+        controller.tagService = tagServiceImpl
     }
 
     void "fetchTag should respond with the Tag with the given id"(){
         given:
             Long tagId = 1L
             Tag tag = new Tag(name: "Jewelry")
-            tagService.fetchTagById(tagId) >> tag
+            tagServiceImpl.fetchTagById(tagId) >> tag
 
         when:
             controller.fetchTag(tagId)
@@ -34,7 +34,7 @@ class TagControllerSpec extends Specification {
         given:
             Tag tag1 = new Tag(name: "Jewelry")
             Tag tag2 = new Tag(name: "Clothes")
-            tagService.fetchAllTag() >> [tag1, tag2]
+            tagServiceImpl.fetchAllTag() >> [tag1, tag2]
 
         when:
             controller.fetchAllTag()
@@ -51,7 +51,7 @@ class TagControllerSpec extends Specification {
             String tagName = "Jewelry"
             request.json = [name: tagName]
             Tag tag = new Tag(name: tagName)
-            tagService.createTag(tagName) >> tag
+            tagServiceImpl.createTag(tagName) >> tag
 
         when:
             controller.createTag()
@@ -78,7 +78,7 @@ class TagControllerSpec extends Specification {
             String tagName = "Jewelry"
             request.json = [name: tagName]
             Tag tag = new Tag(name: tagName)
-            tagService.updateTag(tagId, tagName) >> tag
+            tagServiceImpl.updateTag(tagId, tagName) >> tag
 
         when:
             controller.updateTag(tagId)

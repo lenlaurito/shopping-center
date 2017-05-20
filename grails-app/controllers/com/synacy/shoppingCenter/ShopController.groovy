@@ -8,10 +8,10 @@ class ShopController implements ExceptionHandlerTrait{
 
     static responseFormats = ['json']
 
-    ShopService shopService
+    ShopServiceImpl shopServiceImpl
 
     def fetchShop(Long shopId){
-        respond(shopService.fetchShopById(shopId))
+        respond(shopServiceImpl.fetchShopById(shopId))
     }
 
     def fetchAllShop(){
@@ -19,8 +19,8 @@ class ShopController implements ExceptionHandlerTrait{
         Integer offset = params.offset ? Integer.parseInt(params.offset) : null
         Long tagId = params.tagId ? Long.parseLong(params.tagId) : null
 
-        List<Shop> shopList = shopService.fetchShops(max, offset, tagId)
-        Integer shopCount = shopService.fetchTotalNumberOfShops()
+        List<Shop> shopList = shopServiceImpl.fetchShops(max, offset, tagId)
+        Integer shopCount = shopServiceImpl.fetchTotalNumberOfShops()
         Map<String, Object> shopDetails = [totalRecords: shopCount, records: shopList]
 
         respond(shopDetails)
@@ -37,7 +37,7 @@ class ShopController implements ExceptionHandlerTrait{
         if((tagIds ? tagIds.size():0) > 5){throw new InvalidDataPassed("Invalid Tag Size, Maximum should be 5")}
         if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
 
-        Shop shop = shopService.createShop(name, description, location, tagIds)
+        Shop shop = shopServiceImpl.createShop(name, description, location, tagIds)
         respond(shop, [status: HttpStatus.CREATED])
     }
 
@@ -52,12 +52,12 @@ class ShopController implements ExceptionHandlerTrait{
         if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location used")}
 
 
-        Shop shop = shopService.updateShop(shopId, name, description, location, tagIds)
+        Shop shop = shopServiceImpl.updateShop(shopId, name, description, location, tagIds)
         respond(shop)
     }
 
     def removeShop(Long shopId){
-        shopService.deleteShop(shopId)
+        shopServiceImpl.deleteShop(shopId)
         render(status: HttpStatus.NO_CONTENT)
     }
 

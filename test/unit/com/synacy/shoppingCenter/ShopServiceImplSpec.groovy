@@ -9,14 +9,14 @@ import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-@TestFor(ShopService)
+@TestFor(ShopServiceImpl)
 @Mock([Shop, Tag])
-class ShopServiceSpec extends Specification {
+class ShopServiceImplSpec extends Specification {
 
-    TagService tagService = Mock()
+    TagServiceImpl tagServiceImpl = Mock()
 
     def setup() {
-        service.tagService = tagService
+        service.tagService = tagServiceImpl
     }
 
     void "fetchShopById should return the shop with the given id"(){
@@ -75,7 +75,7 @@ class ShopServiceSpec extends Specification {
             shop1.save()
             shop2.save()
 
-            tagService.fetchTagById(1L) >> tag1
+            tagServiceImpl.fetchTagById(1L) >> tag1
 
         when:
             List<Shop> fetchedShops = service.fetchShops(2, 0, 1L)
@@ -88,7 +88,7 @@ class ShopServiceSpec extends Specification {
     void "fetchShops no tag found should throw NoContentFoundException"(){
         given:
             Long tagId = 1L
-            tagService.fetchTagById(tagId) >> null
+            tagServiceImpl.fetchTagById(tagId) >> null
 
         when:
             service.fetchShops(2, 0, tagId)
@@ -159,7 +159,7 @@ class ShopServiceSpec extends Specification {
             Long id = 1L
             List<Long> idList = [id]
             Tag tag = new Tag(name: "name")
-            tagService.fetchTagById(id) >> tag
+            tagServiceImpl.fetchTagById(id) >> tag
 
         when:
             List<Tag> tagList = service.shopTagValidator(idList)
@@ -172,7 +172,7 @@ class ShopServiceSpec extends Specification {
         given:
             Long id = 1L
             List<Long> idList = [id]
-            tagService.fetchTagById(id) >> null
+            tagServiceImpl.fetchTagById(id) >> null
 
         when:
             service.shopTagValidator(idList)
