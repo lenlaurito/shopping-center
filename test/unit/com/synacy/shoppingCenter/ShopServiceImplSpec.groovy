@@ -35,17 +35,6 @@ class ShopServiceImplSpec extends Specification {
             fetchedShop.tags == shop.tags
     }
 
-    void "fetchShopById no Shop found should throw NoContentFoundException"(){
-        given:
-            Long shopId = 1L
-            Shop.findById(shopId) >> null
-
-        when:
-            service.fetchShopById(shopId)
-
-        then:
-            NoContentFoundException exception = thrown()
-    }
 
     void "fetchShops should return list of all shops"(){
         given:
@@ -83,26 +72,6 @@ class ShopServiceImplSpec extends Specification {
         then:
             fetchedShops.size() == 1
             fetchedShops[0] == shop1
-    }
-
-    void "fetchShops no tag found should throw NoContentFoundException"(){
-        given:
-            Long tagId = 1L
-            tagServiceImpl.fetchTagById(tagId) >> null
-
-        when:
-            service.fetchShops(2, 0, tagId)
-
-        then:
-            NoContentFoundException exception = thrown()
-    }
-
-    void "fetchAllShop should throw NoContentFoundException"(){
-        when:
-            service.fetchShops(2,0,1L)
-
-        then:
-            NoContentFoundException exception = thrown()
     }
 
     void "createShop should create and return tag with the correct information"(){

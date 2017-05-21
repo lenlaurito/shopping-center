@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter
 
+import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.test.mixin.TestFor
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
@@ -28,6 +29,14 @@ class TagControllerSpec extends Specification {
         then:
             response.status == HttpStatus.OK.value()
             response.json.name == "Jewelry"
+    }
+
+    void "fetchTagById no tag found should throw NoContentFoundException"(){
+        when:
+            controller.fetchTag(1L)
+
+        then:
+            NoContentFoundException exception = thrown()
     }
 
     void "fetchAllTag should respond with all the Tags"(){
@@ -96,7 +105,7 @@ class TagControllerSpec extends Specification {
             controller.updateTag(1L)
 
         then:
-            response.status == HttpStatus.NOT_ACCEPTABLE.value()
+            response.status == HttpStatus.BAD_REQUEST.value()
     }
 
     void "removeTag should remove the Tag with the given tagId"(){
@@ -104,6 +113,7 @@ class TagControllerSpec extends Specification {
             controller.removeTag(1L)
 
         then:
+            1 * tagServiceImpl.deleteTag(1L)
             response.status == HttpStatus.NO_CONTENT.value()
     }
 }

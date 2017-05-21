@@ -10,9 +10,7 @@ class ShopServiceImpl implements ShopService{
     TagServiceImpl tagService
 
     Shop fetchShopById(Long shopId){
-        Shop shop = Shop.findById(shopId)
-        if(!shop){ throw new NoContentFoundException("No Shop with the Id found") }
-        return shop
+        return Shop.findById(shopId)
     }
 
     List<Shop> fetchShops(Integer max, Integer offset, Long tagId) {
@@ -27,8 +25,6 @@ class ShopServiceImpl implements ShopService{
             }
         }
         else { shopList = Shop.list([offset: offset, max: max, sort: "id", order: "asc"]) }
-
-        if(!shopList){ throw new NoContentFoundException("No Shops found")}
         return shopList
     }
 

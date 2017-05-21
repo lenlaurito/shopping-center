@@ -1,6 +1,7 @@
 package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
+import com.synacy.shoppingCenter.exception.NoContentFoundException
 import com.synacy.shoppingCenter.trait.ExceptionHandlerTrait
 import org.springframework.http.HttpStatus
 
@@ -11,7 +12,9 @@ class TagController implements ExceptionHandlerTrait{
     TagServiceImpl tagServiceImpl
 
     def fetchTag(Long tagId){
-        respond(tagServiceImpl.fetchTagById(tagId))
+        Tag tag = tagServiceImpl.fetchTagById(tagId)
+        if(!tag){ throw new NoContentFoundException("No Tag with the Id found")}
+        respond(tag)
     }
 
     def fetchAllTag(){

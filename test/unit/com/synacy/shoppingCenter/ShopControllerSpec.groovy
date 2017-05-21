@@ -1,5 +1,6 @@
 package com.synacy.shoppingCenter
 
+import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.test.mixin.TestFor
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
@@ -33,7 +34,15 @@ class ShopControllerSpec extends Specification {
             response.json.tags == []
     }
 
-    void "fetchAllShop max, offset and tagId not null should respond with all the Paginated Shops"(){
+    void "fetchShop no Shop found should throw NoContentFoundException"(){
+        when:
+            controller.fetchShop(1L)
+
+        then:
+            NoContentFoundException exception = thrown()
+    }
+
+    void "fetchAllShop should respond with all the List of all the Shops"(){
         given:
             Shop shop1 = new Shop(name: "shopName1", description: "shopDescription1", location: 1, tags: [])
             Shop shop2 = new Shop(name: "shopName2", description: "shopDescription2", location: 2, tags: [])
@@ -95,7 +104,7 @@ class ShopControllerSpec extends Specification {
             controller.createShop()
 
         then:
-            response.status == HttpStatus.NOT_ACCEPTABLE.value()
+            response.status == HttpStatus.BAD_REQUEST.value()
     }
 
     void "updateShop should respond with the updated Shop and its details"(){
@@ -134,17 +143,15 @@ class ShopControllerSpec extends Specification {
             controller.updateShop(shopId)
 
         then:
-            response.status == HttpStatus.NOT_ACCEPTABLE.value()
+            response.status == HttpStatus.BAD_REQUEST.value()
     }
 
     void "removeShop should remove the Shop with the given shopID"(){
-        given:
-            Long shopId = 1L
-
         when:
-            controller.removeShop(shopId)
+            controller.removeShop(1L)
 
         then:
+            1 * shopServiceImpl.deleteShop(1L)
             response.status == HttpStatus.NO_CONTENT.value()
     }
 }

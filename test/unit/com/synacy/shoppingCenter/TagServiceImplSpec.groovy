@@ -27,14 +27,6 @@ class TagServiceImplSpec extends Specification {
             fetchedTag.name == tag.name
     }
 
-    void "fetchTagById no tag found should throw NoContentFoundException"(){
-         when:
-            service.fetchTagById(1L)
-
-        then:
-            NoContentFoundException exception = thrown()
-    }
-
     void "fetchAllTag should return list of all the tags"(){
         given:
             Tag tag1 = new Tag(name: "Jewelry")
@@ -49,14 +41,6 @@ class TagServiceImplSpec extends Specification {
             fetchedTags.size() == 2
             fetchedTags.contains(tag1)
             fetchedTags.contains(tag2)
-    }
-
-    void "fetchAllTag no tags found should throw NoContentFoundException"(){
-        when:
-            service.fetchAllTag()
-
-        then:
-            NoContentFoundException exception = thrown()
     }
 
     void "createTag should create and return new tag with the correct information"(){
