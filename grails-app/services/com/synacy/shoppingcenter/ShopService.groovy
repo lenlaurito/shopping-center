@@ -4,6 +4,7 @@ import grails.transaction.Transactional
 import com.synacy.shoppingcenter.trait.ErrorHandler
 import com.synacy.shoppingcenter.exception.InvalidFieldException
 import com.synacy.shoppingcenter.exception.NoContentException
+import com.synacy.shoppingcenter.exception.InvalidParameterException
 import grails.validation.ValidationException
 
 @Transactional
@@ -11,12 +12,21 @@ class ShopService implements ErrorHandler{
 
     TagService tagService
 
-    def fetchAllShops(Integer max, Integer offset, Long tagId) {
+    def fetchAllShops(Integer max, Integer offset, String tagName) {
 
-        if(tagId) {
-            def tag = tagService.fetchTagById(tagId)
-            if(!tag) {
-                throw new NoContentException("This tag does not exist.")
+        if(max || offset){
+            if(max < 0 || offset < 0) {
+                throw new InvalidParameterException("Invalid parameters entered.")
+            }
+        }
+
+        if(!tagName) {
+            return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
+            }else {
+                def tag = tagService.fetchTagByName(tagName)
+
+                if(!tag) {
+                    throw new NoContentException("This tag does not exist.")
                 }else {
                     return Shop.createCriteria().list(max: max, offset: offset) {
                         tags {
@@ -25,9 +35,7 @@ class ShopService implements ErrorHandler{
                         order('id', 'asc')
                     }
                 }
-        }else {
-            return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
-        }
+            }
     }
 
     def fetchShopById(Long shopId) {
@@ -55,16 +63,12 @@ class ShopService implements ErrorHandler{
          shop.description = description
          shop.tags = tags
 
-         try {
-             return shop.save()
-         }catch (ValidationException e){
-             throw new InvalidFieldException("Missing or invalid input.")
-         }
+         return shop.save()
     }
 
     def deleteShop(Shop shop) {
 
-         shop.delete()
+        shop.delete()
     }
 
     def fetchTotalNumberOfShops() {
