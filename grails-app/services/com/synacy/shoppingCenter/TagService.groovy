@@ -38,8 +38,10 @@ class TagService {
 
     void deleteTag(Long tagId){
         Tag tagToBeDeleted = fetchTagById(tagId)
-        if(tagToBeDeleted.shops){throw new DataConflictException("Tag still in use")}
-        tagToBeDeleted.delete()
+        if(tagToBeDeleted){
+            if(tagToBeDeleted.shops){throw new DataConflictException("Tag still in use")}
+            tagToBeDeleted.delete()
+        }
     }
 
 }

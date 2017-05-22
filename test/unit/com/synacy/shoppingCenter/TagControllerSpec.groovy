@@ -1,6 +1,5 @@
 package com.synacy.shoppingCenter
 
-import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.test.mixin.TestFor
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
