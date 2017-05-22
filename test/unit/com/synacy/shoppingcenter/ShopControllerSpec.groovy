@@ -209,6 +209,19 @@ class ShopControllerSpec extends Specification {
         response.status == HttpStatus.NO_CONTENT.value()
     }
 
+    void "removeShop should throw ResourceNotFoundException if no Shop exist with the specified id"() {
+        given:
+        Long shopId = 100L
+
+        shopService.fetchShopById(shopId) >> null
+
+        when:
+        controller.removeShop(shopId)
+
+        then:
+        response.status == HttpStatus.NOT_FOUND.value()
+    }
+
     void "updateShop should update the Shop which has the specified id"() {
         given:
         Long shopId = 100L

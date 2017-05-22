@@ -180,6 +180,19 @@ class TagControllerSpec extends Specification {
         response.status == HttpStatus.NO_CONTENT.value()
     }
 
+    void "removeTag should throw ResourceNotFoundException if no tag exist with the specified id"() {
+        given:
+        Long tagId = 200L
+
+        tagService.fetchTagById(tagId) >> null
+
+        when:
+        controller.removeTag(tagId)
+
+        then:
+        response.status == HttpStatus.NOT_FOUND.value()
+    }
+
     void "removeTag should throw ExistingResourceException if tag is still used by a shop"() {
         given:
         Long tagId = 100L
