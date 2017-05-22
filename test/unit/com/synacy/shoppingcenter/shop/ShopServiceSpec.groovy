@@ -3,6 +3,7 @@ package com.synacy.shoppingcenter.shop
 import org.springframework.http.HttpStatus
 
 import com.synacy.shoppingcenter.exception.ResourceNotFoundException;
+import com.synacy.shoppingcenter.tag.Tag
 
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
@@ -15,10 +16,9 @@ import spock.lang.Specification
 @Mock([Shop])
 class ShopServiceSpec extends Specification {
 
-	void "fetchById should return the shop with the given id"() {
+	void "fetchShopById should return the shop with the given id"() {
 		given:
-		Shop shop = new Shop(name: "Jollibee", description: "Bida ang saya.", location: "FIRST_FLOOR")
-		shop.save()
+		Shop shop = new Shop(name: "Jollibee", description: "Bida ang saya.", location: "FIRST_FLOOR").save()
 
 		when:
 		Shop fetchedShop = service.fetchShopById(shop.id)
@@ -30,7 +30,7 @@ class ShopServiceSpec extends Specification {
 		fetchedShop.location == shop.location
 	}
 	
-	void "fetchById should throw exception if id is not found"() {
+	void "fetchShopById should throw exception if id is not found"() {
 		when:
 		Shop fetchedShop = service.fetchShopById(100L)
 
@@ -44,12 +44,13 @@ class ShopServiceSpec extends Specification {
 		Integer offset = 0
 		Integer max = 3
 		
+		Tag tag = new Tag(name: "Restaurant")
 		Shop shop1 = new Shop(name: "Jollibee", description: "Bida ang saya.", location: "FIRST_FLOOR").save()
 		Shop shop2 = new Shop(name: "McDonalds", description: "Love ko to.", location: "SECOND_FLOOR").save()
 		Shop shop3 = new Shop(name: "KFC", description: "Kapag fried chicken.", location: "FIRST_FLOOR").save()
 
 		when:
-		List<Shop> fetchedShops = service.fetchShops(tagId, offset, max)
+		List<Shop> fetchedShops = service.fetchShops(tag, offset, max)
 
 		then:
 		fetchedShops.size() == 3
