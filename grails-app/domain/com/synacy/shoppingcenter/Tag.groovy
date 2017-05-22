@@ -6,6 +6,7 @@ class Tag {
 	String name
 
 	static constraints = {
+		name unique: true, matches: "[a-zA-Z]+"
 	}
 
 	static mapping = {
