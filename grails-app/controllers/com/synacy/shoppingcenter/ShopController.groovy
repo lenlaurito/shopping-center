@@ -101,8 +101,8 @@ class ShopController implements ExceptionHandlingTrait {
     def removeShop(Long shopId) {
         Shop shop = shopService.fetchShopById(shopId)
 
-        if(!shop) {
-            return render(status: HttpStatus.NO_CONTENT)
+        if(shop == null) {
+            throw new ResourceNotFoundException("Shop not found")
         }
 
         shopService.deleteShop(shop)
