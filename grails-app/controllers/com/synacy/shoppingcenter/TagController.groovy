@@ -4,6 +4,8 @@ import com.synacy.shoppingcenter.exception.NoContentException
 import com.synacy.shoppingcenter.exception.InvalidFieldException
 import com.synacy.shoppingcenter.exception.InvalidUriException
 import com.synacy.shoppingcenter.trait.ErrorHandler
+import grails.validation.ValidationException
+import grails.converters.JSON
 import org.springframework.http.HttpStatus
 
 class TagController implements ErrorHandler{
@@ -41,8 +43,12 @@ class TagController implements ErrorHandler{
          if(!name) {
              throw new InvalidFieldException("Missing or invalid input.")
          }else {
-             Tag tag = tagService.createTag(name)
-             respond(tag, [status: HttpStatus.CREATED])
+             try {
+                 Tag tag = tagService.createTag(name)
+                 respond(tag, [status: HttpStatus.CREATED])
+             }catch (ValidationException e) {
+                 render([error: e.errors] as JSON)
+             }
          }
     }
 
@@ -60,8 +66,12 @@ class TagController implements ErrorHandler{
                     if(!tag) {
                         throw new NoContentException("This tag does not exist.")
                     }else {
-                        tag = tagService.updateTag(tag, name)
-                        respond(tag)
+                        try {
+                            tag = tagService.updateTag(tag, name)
+                            respond(tag)
+                        }catch (ValidationException e) {
+                            render([error: e.errors] as JSON)
+                        }
                     }
                 }
         }
