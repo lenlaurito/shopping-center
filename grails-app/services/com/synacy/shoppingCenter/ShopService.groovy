@@ -10,7 +10,9 @@ class ShopService {
     TagService tagService
 
     Shop fetchShopById(Long shopId){
-        return Shop.findById(shopId)
+        Shop shop = Shop.findById(shopId)
+        if(!shop){ throw new NoContentFoundException("No Shop with the Id found") }
+        return shop
     }
 
     List<Shop> fetchShops(Integer max, Integer offset, Long tagId) {
@@ -58,7 +60,7 @@ class ShopService {
 
     void deleteShop(Long shopId){
         Shop shopToBeDeleted = fetchShopById(shopId)
-        if(shopToBeDeleted){shopToBeDeleted.delete()}
+        shopToBeDeleted.delete()
     }
 
     List<Tag> shopTagValidator(List<Long> tagIds){

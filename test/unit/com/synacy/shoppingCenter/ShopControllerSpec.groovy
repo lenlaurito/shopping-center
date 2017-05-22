@@ -33,14 +33,6 @@ class ShopControllerSpec extends Specification {
             response.json.tags == []
     }
 
-    void "fetchShop no Shop found should throw NoContentFoundException"(){
-        when:
-            controller.fetchShop(1L)
-
-        then:
-            response.status ==  HttpStatus.NOT_FOUND.value()
-    }
-
     void "fetchAllShop should respond with all the List of all the Shops"(){
         given:
             Shop shop1 = new Shop(name: "shopName1", description: "shopDescription1", location: 1, tags: [])

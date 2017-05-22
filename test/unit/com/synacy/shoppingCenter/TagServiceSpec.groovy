@@ -2,6 +2,7 @@ package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.DataConflictException
 import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
+import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -24,6 +25,14 @@ class TagServiceSpec extends Specification {
         then:
             fetchedTag.id == tag.id
             fetchedTag.name == tag.name
+    }
+
+    void "fetchTag no tag found should throw NoContentFoundException"(){
+        when:
+            service.fetchTagById(1L)
+
+        then:
+            NoContentFoundException exception = thrown()
     }
 
     void "fetchAllTag should return list of all the tags"(){

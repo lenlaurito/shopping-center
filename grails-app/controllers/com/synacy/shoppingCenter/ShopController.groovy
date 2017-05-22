@@ -12,9 +12,7 @@ class ShopController implements ExceptionHandlerTrait{
     ShopService shopService
 
     def fetchShop(Long shopId){
-        Shop shop = shopService.fetchShopById(shopId)
-        if(!shop){ throw new NoContentFoundException("No Shop with the Id found") }
-        respond(shop)
+        respond(shopService.fetchShopById(shopId))
     }
 
     def fetchAllShop(){

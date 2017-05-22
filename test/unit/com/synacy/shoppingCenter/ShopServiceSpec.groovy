@@ -1,6 +1,7 @@
 package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
+import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -34,6 +35,13 @@ class ShopServiceSpec extends Specification {
             fetchedShop.tags == shop.tags
     }
 
+    void "fetchShopById no Shop found should throw NoContentFoundException"(){
+        when:
+            service.fetchShopById(1L)
+
+        then:
+            NoContentFoundException exception = thrown()
+    }
 
     void "fetchShops should return list of all shops"(){
         given:

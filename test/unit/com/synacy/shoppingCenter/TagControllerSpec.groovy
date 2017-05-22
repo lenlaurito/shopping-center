@@ -30,14 +30,6 @@ class TagControllerSpec extends Specification {
             response.json.name == "Jewelry"
     }
 
-    void "fetchTag no tag found should throw NoContentFoundException"(){
-        when:
-            controller.fetchTag(1L)
-
-        then:
-           response.status ==  HttpStatus.NOT_FOUND.value()
-    }
-
     void "fetchAllTag should respond with all the Tags"(){
         given:
             Tag tag1 = new Tag(name: "Jewelry")
