@@ -12,8 +12,8 @@ class ShopMarshaller {
                return [
                          id: it.id,
                          name: it.name,
-                         location: it.location.name,
-                         tags: it.tags
+                         location: it.location.key,
+                         tags: it.tags.name
                ]
           }
      }
