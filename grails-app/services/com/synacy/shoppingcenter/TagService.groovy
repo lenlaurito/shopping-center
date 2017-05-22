@@ -2,6 +2,7 @@ package com.synacy.shoppingcenter
 
 import grails.transaction.Transactional
 import com.synacy.shoppingcenter.exceptions.*
+import org.codehaus.groovy.grails.web.json.JSONObject
 
 @Transactional
 class TagService {
@@ -34,6 +35,10 @@ class TagService {
         List<Tag> existingTags = []
 
         for(int i = 0; i < tagIds.size(); i++) {
+
+            if(tagIds.get(i).equals(JSONObject.NULL))
+                throw new NullPointerException("Tag Id should not be null")
+
              Tag tag = fetchTagById(tagIds.get(i))
 
              if(tag != null)
@@ -43,6 +48,10 @@ class TagService {
          }
 
         return existingTags
+    }
+
+    public Tag fetchTagByName(String name) {
+        return Tag.findByName(name)
     }
 
 
