@@ -3,6 +3,7 @@ package com.synacy.shoppingcenter
 import grails.transaction.Transactional
 import com.synacy.shoppingcenter.exception.NoContentException
 import com.synacy.shoppingcenter.trait.ErrorHandler
+import grails.validation.ValidationException
 
 @Transactional
 class TagService implements ErrorHandler{
@@ -19,7 +20,7 @@ class TagService implements ErrorHandler{
 
     def createTag(String name) {
 
-         Tag tag = new Tag(name: name)
+         Tag tag = new Tag(name: name.toLowerCase())
 
          return tag.save()
     }
@@ -36,13 +37,13 @@ class TagService implements ErrorHandler{
          tag.delete()
     }
 
-    def fetchTagsFromIds(def tagIds) {
+    def fetchTagsByTagName(def tagNames) {
 
          List<Tag> tags = []
          def tag
 
-         tagIds.each {
-             tag = fetchTagById(it)
+         tagNames.each {
+             tag = Tag.findAllByName(it.toLowerCase())
              if(!tag) {
                  throw new NoContentException("Tag or tags don't exist.")
              } else {
@@ -51,5 +52,10 @@ class TagService implements ErrorHandler{
          }
 
          return tags
+    }
+
+    def fetchTagByName(def tagName) {
+
+        return Tag.findByName(tagName)
     }
 }
