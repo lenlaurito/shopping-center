@@ -59,6 +59,36 @@ class TagControllerSpec extends Specification {
         response.json.name == name
     }
 
+    void "createTag should throw NullPointerException if name request is null"() {
+        given:
+        String name = null
+
+        request.json = [name: name]
+
+        when:
+        controller.createTag()
+
+        then:
+        response.status == HttpStatus.BAD_REQUEST.value()
+    }
+
+    void "createTag should throw ExistingResourceException if name request already exist in the database"() {
+        given:
+        String name = "First Tag"
+
+        request.json = [name: name]
+
+        Tag tag = new Tag(name: name)
+
+        tagService.fetchTagByName(name) >> tag
+
+        when:
+        controller.createTag()
+
+        then:
+        response.status == HttpStatus.BAD_REQUEST.value()
+    }
+
     void "updateTag should update the Tag which has the specified id"() {
         given:
         Long tagId = 100L
@@ -93,6 +123,42 @@ class TagControllerSpec extends Specification {
 
         then:
         response.status == HttpStatus.NOT_FOUND.value()
+    }
+
+    void "updateTag should throw NullPointerException if name request is null"() {
+        given:
+        Long tagId = 100L
+        String name = null
+
+        request.json = [name: name]
+
+        tagService.fetchTagById(tagId) >> new Tag()
+
+        when:
+        controller.updateTag(tagId)
+
+        then:
+        response.status == HttpStatus.BAD_REQUEST.value()
+    }
+
+    void "updateTag should throw ExistingResourceException if name request already exist in the database"() {
+        given:
+        Long tagId = 100L
+        String name = "First Tag"
+
+        request.json = [name: name]
+
+        Tag tag = new Tag(name: name)
+
+        tagService.fetchTagById(tagId) >> tag
+
+        tagService.fetchTagByName(name) >> tag
+
+        when:
+        controller.updateTag(tagId)
+
+        then:
+        response.status == HttpStatus.BAD_REQUEST.value()
     }
 
     void "removeTag should remove the Tag with the specified id"() {

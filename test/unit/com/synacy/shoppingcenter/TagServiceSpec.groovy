@@ -3,6 +3,7 @@ package com.synacy.shoppingcenter
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 import com.synacy.shoppingcenter.exceptions.*
+import org.codehaus.groovy.grails.web.json.JSONObject
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
@@ -113,7 +114,34 @@ class TagServiceSpec extends Specification {
         service.checkTags(tagIds)
 
         then:
-        ResourceNotFoundException exception = thrown()
+        thrown(ResourceNotFoundException)
+    }
+
+    void "checkTags should throw NullPointerException if there is a JSON.NULL value in the tagId request"() {
+        given:
+        Tag tag1 = new Tag(name: "Tag 1")
+        tag1.save()
+
+        List tagIds = [tag1.id, JSONObject.NULL]
+
+        when:
+        service.checkTags(tagIds)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "fetchTagByName should fetch the Tag with the specific name"() {
+        given:
+        Tag tag = new Tag(name: "First Tag")
+        tag.save()
+
+        when:
+        Tag result = service.fetchTagByName("First Tag")
+
+        then:
+        tag == result
+        tag.name == result.name
     }
 
 }

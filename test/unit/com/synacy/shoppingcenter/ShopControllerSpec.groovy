@@ -128,6 +128,23 @@ class ShopControllerSpec extends Specification {
         }
     }
 
+    void "createShop should return NullPointerException if name request is null"() {
+        given:
+        String name = null
+        String description = "A work shop"
+
+        String location = "First floor"
+        List tagIds = []
+
+        request.json = [name: name, description: description, location: location, tagId: tagIds]
+
+        when:
+        controller.createShop()
+
+        then:
+        response.status == HttpStatus.BAD_REQUEST.value()
+    }
+
     void "createShop should return InvalidLocationException if request.location is null or not in the Location enum"() {
         given:
         String name = "Work Shop"
@@ -141,13 +158,13 @@ class ShopControllerSpec extends Specification {
 
         String location = "Fifth floor"
 
-        request.json = [name: name, description: description, location: location, tags: tagIds]
+        request.json = [name: name, description: description, location: location, tagId: tagIds]
 
         when:
         controller.createShop()
 
         then:
-        response.status == HttpStatus.NOT_FOUND.value()
+        response.status == HttpStatus.BAD_REQUEST.value()
     }
 
     void "createShop should return LimitExceedException if tags requested are more than 5"() {
@@ -209,7 +226,7 @@ class ShopControllerSpec extends Specification {
 
         tagService.checkTags(tagIds) >> tags
 
-        request.json = [name: name, description: description, location: locationString, tags: tagIds]
+        request.json = [name: name, description: description, location: locationString, tagId: tagIds]
 
         Shop shop = new Shop(name: name, description: description, location: location, tags: tags)
 
@@ -249,6 +266,25 @@ class ShopControllerSpec extends Specification {
         response.status == HttpStatus.NOT_FOUND.value()
     }
 
+    void "updateShop should throw NullPointerException if name request is null"() {
+        given:
+        Long shopId = 100L
+        String name = null
+        String description = "A work shop"
+
+        String location = "First floor"
+
+        request.json = [name: name, description: description, location: location, tagId: []]
+
+        shopService.fetchShopById(shopId) >> new Shop()
+
+        when:
+        controller.updateShop(shopId)
+
+        then:
+        response.status == HttpStatus.BAD_REQUEST.value()
+    }
+
     void "updateShop should throw InvalidLocationException if request.location is null or not in the Location enum"() {
         given:
         Long shopId = 100L
@@ -257,13 +293,15 @@ class ShopControllerSpec extends Specification {
 
         String location = "Fifth floor"
 
-        request.json = [name: name, description: description, location: location, tags: []]
+        request.json = [name: name, description: description, location: location, tagId: []]
+
+        shopService.fetchShopById(shopId) >> new Shop()
 
         when:
         controller.updateShop(shopId)
 
         then:
-        response.status == HttpStatus.NOT_FOUND.value()
+        response.status == HttpStatus.BAD_REQUEST.value()
     }
 
     void "updateShop should return LimitExceedException if tags requested are more than 5"() {
@@ -285,7 +323,7 @@ class ShopControllerSpec extends Specification {
         String locationString = "First floor"
         Location location = Location.valueOfLocation(locationString)
 
-        request.json = [name: name, description: description, location: locationString, tags: tagIds]
+        request.json = [name: name, description: description, location: locationString, tagId: tagIds]
 
         Shop shop = new Shop(name: name, description: description, location: location, tags: tags)
 
