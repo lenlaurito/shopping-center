@@ -13,7 +13,7 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(ShopService)
-@Mock([Shop])
+@Mock([Shop, Tag])
 class ShopServiceSpec extends Specification {
 
 	void "fetchShopById should return the shop with the given id"() {
@@ -43,8 +43,8 @@ class ShopServiceSpec extends Specification {
 		Long tagId = null
 		Integer offset = 0
 		Integer max = 3
+		Tag tag = null
 		
-		Tag tag = new Tag(name: "Restaurant")
 		Shop shop1 = new Shop(name: "Jollibee", description: "Bida ang saya.", location: "FIRST_FLOOR").save()
 		Shop shop2 = new Shop(name: "McDonalds", description: "Love ko to.", location: "SECOND_FLOOR").save()
 		Shop shop3 = new Shop(name: "KFC", description: "Kapag fried chicken.", location: "FIRST_FLOOR").save()
@@ -57,6 +57,31 @@ class ShopServiceSpec extends Specification {
 		fetchedShops.get(0) == shop1
 		fetchedShops.get(1) == shop2
 		fetchedShops.get(2) == shop3
+	}
+	
+	void "fetchShops when tag ids are specified should return all shops filtered by tag id"() {
+		given:
+		Long tag1Id = 100L
+		Long tag2Id = 200L
+		Integer offset = 0
+		Integer max = 3
+		Tag tag1 = new Tag(name: "Thag Life 1").save()
+		Tag tag2 = new Tag(name: "Thag Life 2").save()
+		tag1.id = tag1Id
+		tag2.id = tag2Id
+		
+		Shop shop1 = new Shop(name: "Jollibee", description: "Bida ang saya.", location: "FIRST_FLOOR", tags: [tag1]).save()
+		Shop shop2 = new Shop(name: "McDonalds", description: "Love ko to.", location: "SECOND_FLOOR", tags: [tag2]).save()
+		Shop shop3 = new Shop(name: "KFC", description: "Kapag fried chicken.", location: "FIRST_FLOOR", tags: [tag1, tag2]).save()
+
+		when:
+		List<Shop> fetchedShops = service.fetchShops(tag1, offset, max)
+
+		then:
+		fetchedShops.size() == 2
+		fetchedShops.contains(shop1)
+		!fetchedShops.contains(shop2)
+		fetchedShops.contains(shop3)
 	}
 
 	void "createNewShop should create and return the new shop with the correct details"() {

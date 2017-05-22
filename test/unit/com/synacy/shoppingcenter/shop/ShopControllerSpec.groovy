@@ -61,7 +61,6 @@ class ShopControllerSpec extends Specification {
 		
 		Shop shop1 = new Shop(id: 1L, name: "Jollibee", description: "Bida ang saya!", location: Location.FIRST_FLOOR, tags: [])
 		Shop shop2 = new Shop(id: 2L, name: "McDonalds", description: "Love ko to", location: Location.FIRST_FLOOR, tags: [])
-//		Tag tag = new Tag(name: "Restaurant")
 		
 		when:
 		controller.fetchAllShops()

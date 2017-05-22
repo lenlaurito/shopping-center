@@ -25,7 +25,7 @@ class ShopController implements RestExceptionHandler {
 		Integer offset = params.offset ? Integer.parseInt(params.offset) : null
 		Integer max = params.max ? Integer.parseInt(params.max) : null
 
-		Tag tag;
+		Tag tag
 		if (tagId) {
 			tag = tagService.fetchTagById(tagId)
 		}
