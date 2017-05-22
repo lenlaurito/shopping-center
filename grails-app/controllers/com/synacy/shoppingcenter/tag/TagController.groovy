@@ -12,6 +12,9 @@ class TagController implements RestExceptionHandler {
 	TagService tagService
 
 	def fetchTag(Long tagId) {
+		if (!tagId) {
+			throw new InvalidRequestException("Unable to parse id.")
+		}
 		Tag tag = tagService.fetchTagById(tagId)
 		respond(tag)
 	}

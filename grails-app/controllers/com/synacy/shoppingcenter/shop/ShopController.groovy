@@ -16,14 +16,23 @@ class ShopController implements RestExceptionHandler {
 	TagService tagService
 
 	def fetchShop(Long shopId) {
+		if (!shopId) {
+			throw new InvalidRequestException("Unable to parse id.")
+		}
 		Shop shop = shopService.fetchShopById(shopId)
 		respond(shop)
 	}
 
 	def fetchAllShops() {
-		Long tagId = params.tagId ? Long.parseLong(params.tagId) : null
-		Integer offset = params.offset ? Integer.parseInt(params.offset) : null
-		Integer max = params.max ? Integer.parseInt(params.max) : null
+		Long tagId
+		Integer offset, max
+		try {
+			tagId = params.tagId ? Long.parseLong(params.tagId) : null
+			offset = params.offset ? Integer.parseInt(params.offset) : null
+			max = params.max ? Integer.parseInt(params.max) : null
+		} catch (NumberFormatException e) {
+			throw new InvalidRequestException("Unable to parse params.")
+		}
 
 		Tag tag
 		if (tagId) {
@@ -79,7 +88,6 @@ class ShopController implements RestExceptionHandler {
 	def removeShop(Long shopId) {
 		Shop shop = shopService.fetchShopById(shopId)
 		shopService.deleteShop(shop)
-
 		render(status: HttpStatus.NO_CONTENT)
 	}
 
