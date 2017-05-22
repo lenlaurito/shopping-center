@@ -43,6 +43,10 @@ class ShopController implements ExceptionHandlingTrait {
         String locationString = request.JSON.location ?: null
         List tagIds = request.JSON.tagId as List ?: []
 
+        if(name == null) {
+            throw new NullPointerException("Name field should not be null")
+        }
+
         Location location = Location.valueOfLocation(locationString)
         if(location == null) {
             throw new InvalidLocationException()
@@ -62,17 +66,21 @@ class ShopController implements ExceptionHandlingTrait {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
         String locationString = request.JSON.location ?: null
-        List tagIds = request.JSON.tags as List ?: null
-
-        Location location = Location.valueOfLocation(locationString)
-        if(location == null) {
-            throw new InvalidLocationException()
-        }
+        List tagIds = request.JSON.tagId as List ?: []
 
         Shop shop = shopService.fetchShopById(shopId)
 
         if(shop == null) {
             throw new ResourceNotFoundException("Shop not found")
+        }
+
+        if(name == null) {
+            throw new NullPointerException("Name field should not be null")
+        }
+
+        Location location = Location.valueOfLocation(locationString)
+        if(location == null) {
+            throw new InvalidLocationException()
         }
 
         if(tagIds == null) {

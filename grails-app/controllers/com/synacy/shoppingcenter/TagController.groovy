@@ -31,6 +31,16 @@ class TagController implements ExceptionHandlingTrait {
     def createTag() {
         String name = request.JSON.name ?: null
 
+        if(name == null) {
+            throw new NullPointerException("Name field should not be null")
+        }
+
+        Tag fetchTag = tagService.fetchTagByName(name)
+
+        if(fetchTag != null) {
+            throw new ExistingResourceException("Tag name already exist")
+        }
+
         Tag tag = tagService.createNewTag(name)
         respond(tag, [status: HttpStatus.CREATED])
     }
@@ -42,6 +52,16 @@ class TagController implements ExceptionHandlingTrait {
 
         if(tag == null) {
             throw new ResourceNotFoundException("Tag not found.")
+        }
+
+        if(name == null) {
+            throw new NullPointerException("Name field should not be null")
+        }
+
+        Tag fetchTag = tagService.fetchTagByName(name)
+
+        if(fetchTag != null && fetchTag.id != tagId) {
+            throw new ExistingResourceException("Tag name already exist")
         }
 
         tag = tagService.updateTag(tag, name)
