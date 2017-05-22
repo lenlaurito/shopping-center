@@ -10,7 +10,6 @@ import spock.lang.Specification
  */
 @TestFor(TagService)
 @Mock([Tag])
-//@Build([Tag])
 class TagServiceSpec extends Specification {
 
 	void "fetchById should return the tag with the given id"() {
@@ -48,7 +47,6 @@ class TagServiceSpec extends Specification {
 
 		when:
 		Tag createdTag = service.createNewTag(name)
-		println createdTag.id
 
 		then:
 		createdTag.name == name
@@ -76,7 +74,6 @@ class TagServiceSpec extends Specification {
 
 		when:
 		service.deleteTag(tagToDelete)
-		println tagToDelete.id
 
 		then:
 		!Tag.exists(tagToDelete.id)
