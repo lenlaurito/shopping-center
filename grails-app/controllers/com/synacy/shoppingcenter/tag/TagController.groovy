@@ -1,14 +1,11 @@
 package com.synacy.shoppingcenter.tag
 
-import com.synacy.shoppingcenter.exception.*;
-import com.synacy.shoppingcenter.exception.handler.DatabaseExceptionHandler;
-import com.synacy.shoppingcenter.exception.handler.ResourceExceptionHandler;
+import com.synacy.shoppingcenter.exception.*
+import com.synacy.shoppingcenter.exception.handler.RestExceptionHandler
 
-import org.postgresql.util.PSQLException
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 
-class TagController implements DatabaseExceptionHandler, ResourceExceptionHandler {
+class TagController implements RestExceptionHandler {
 
 	static responseFormats = ['json']
 
@@ -30,14 +27,13 @@ class TagController implements DatabaseExceptionHandler, ResourceExceptionHandle
 		String name = request.JSON.name ?: null
 
 		if (!name) {
-			throw new InvalidRequestException("Name should not be empty.")
+			throw new InvalidRequestException("Missing required parameter.")
 		}
-		
-		if (tagService.hasDuplicates(name)) {
-			throw new InvalidRequestException("Existing tag with name '" + name + "' already existed.")
+		Integer tagCountByName = tagService.countByName(name)
+		if (tagCountByName > 0) {
+			throw new RequestConflictViolationException("Existing tag with name '" + name + "' already exists.")
 		}
 		Tag tag = tagService.createNewTag(name)
-		
 		respond(tag, [status: HttpStatus.CREATED])
 	}
 
@@ -45,14 +41,15 @@ class TagController implements DatabaseExceptionHandler, ResourceExceptionHandle
 		String name = request.JSON.name ?: null
 
 		if (!name) {
-			throw new InvalidRequestException("Invalid request.")
+			throw new InvalidRequestException("Missing required parameter.")
 		}
 		Tag tag = tagService.fetchTagById(tagId)
 		if (!tag) {
 			throw new ResourceNotFoundException("Tag with id " + tagId + " not found")
 		}
-		if (tagService.hasDuplicates(name)) {
-			throw new InvalidRequestException("Existing tag with name '" + name + "' already existed.")
+		Integer tagCountByName = tagService.countByName(name)
+		if (tagCountByName > 0) {
+			throw new RequestConflictViolationException("Existing tag with name '" + name + "' already exists.")
 		}
 		tag = tagService.updateTag(tag, name)
 		respond(tag)
@@ -62,11 +59,10 @@ class TagController implements DatabaseExceptionHandler, ResourceExceptionHandle
 		Tag tag = tagService.fetchTagById(tagId)
 		try {
 			tagService.deleteTag(tag)
-		} catch (DataIntegrityViolationException psqle) {
-			throw new ResourceConflictException("Tag id " + tagId + " is used by another shop.");
+		} catch (Exception e) {
+			throw new RequestConflictViolationException("Unable to delete a tag attached to a shop.")
 		}
-
 		render(status: HttpStatus.NO_CONTENT)
 	}
-	
+
 }

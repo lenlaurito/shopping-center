@@ -10,8 +10,9 @@ class ShopMarshaller {
 			return [
 					id       	: shop.id,
 					name     	: shop.name,
-					description : shop.description,
-					tags		: shop.tags
+					description : shop.description ?: "",
+					location	: shop.location.name(),
+					tags		: shop.tags ?: []
 					
 			]
 		}

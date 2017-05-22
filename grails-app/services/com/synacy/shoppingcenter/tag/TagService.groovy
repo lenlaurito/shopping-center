@@ -1,7 +1,6 @@
 package com.synacy.shoppingcenter.tag
 
-import com.synacy.shoppingcenter.exception.ResourceNotFoundException;
-import com.synacy.shoppingcenter.tag.Tag
+import com.synacy.shoppingcenter.exception.*
 
 import grails.transaction.Transactional
 
@@ -40,12 +39,8 @@ class TagService {
 		return Tag.count()
 	}
 	
-	public hasDuplicates(String name) {
-		return Tag.countByName(name) > 0
-	}
-	
-	public Integer fetchTotalNumberOfTagsByName(String name) {
-		return Shop.countByName(name)
+	public Integer countByName(String name) {
+		return Tag.countByName(name)
 	}
 
 }

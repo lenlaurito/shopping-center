@@ -10,6 +10,7 @@ class TagMarshaller {
 			return [
 					id      : tag.id,
 					name    : tag.name,
+					//shops   : tag.shops.id
 			]
 		}
 	}
