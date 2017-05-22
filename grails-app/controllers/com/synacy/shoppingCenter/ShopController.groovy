@@ -37,8 +37,8 @@ class ShopController implements ExceptionHandlerTrait{
         Integer location = request.JSON.location ?: null
         List<Long> tagIds = request.JSON.tags ?: null
 
-        if(!name || !location){throw new InvalidDataPassed("Invalid Request Body. Name, description and location must not be nul")}
-        if((tagIds ? tagIds.size():0) > 5){throw new InvalidDataPassed("Invalid Tag Size, Maximum should be 5")}
+        if(!name || !location){throw new InvalidDataPassed("Invalid Request Body. Name and location must not be nul")}
+        if((tagIds ? tagIds.size():0) > 5){throw new InvalidDataPassed("Invalid Number of Tags, Maximum should be 5")}
         if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location value used")}
 
         Shop shop = shopService.createShop(name, description, location, tagIds)
@@ -51,8 +51,8 @@ class ShopController implements ExceptionHandlerTrait{
         Integer location = request.JSON.location ?: null
         List<Long> tagIds = request.JSON.tags ?: null
 
-        if(!name || !description || !location){throw new InvalidDataPassed("Invalid Request Body. Name, description and location must not be nul")}
-        if((tagIds ? tagIds.size():0) > 5){throw new InvalidDataPassed("Invalid Tag Size, Maximum should be 5")}
+        if(!name || !location){throw new InvalidDataPassed("Invalid Request Body. Name and location must not be nul")}
+        if((tagIds ? tagIds.size():0) > 5){throw new InvalidDataPassed("Invalid Number of Tags, Maximum should be 5")}
         if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location value used")}
 
         Shop shop = shopService.updateShop(shopId, name, description, location, tagIds)
