@@ -72,7 +72,7 @@ class TagController implements ExceptionHandlingTrait {
         Tag tag = tagService.fetchTagById(tagId)
 
         if(tag == null) {
-            return render([status: HttpStatus.NO_CONTENT])
+            throw new ResourceNotFoundException("Tag not found")
         }
 
         if(!tag.shops.isEmpty()) {
