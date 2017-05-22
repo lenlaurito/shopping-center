@@ -2,10 +2,10 @@ class UrlMappings {
 
 	static mappings = {
         "/api/v1/shop"(controller: "shop") {
-            action = [GET: "index", POST: "create"]
+            action = [GET: "fetchAllShops", POST: "createShop"]
         }
         "/api/v1/shop/${shopId}"(controller: "shop") {
-            action = [GET: "view", PUT: "update", DELETE: "delete"]
+            action = [GET: "viewShop", PUT: "updateShop", DELETE: "deleteShop"]
         }
         "/api/v1/tag"(controller: "tag") {
             action = [GET: "index", POST: "create"]

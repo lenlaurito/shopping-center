@@ -30,7 +30,7 @@ class ShopServiceSpec extends Specification {
         shop3.save()
 
         when:
-        List<Shop> shops = service.fetchAllShops(offset, max)
+        List<Shop> shops = service.fetchAllShops(offset, max, null)
 
         then:
         shops.size() == 3

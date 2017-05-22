@@ -1,6 +1,6 @@
 import com.synacy.shoppingcenter.ShopMarshaller
 import com.synacy.shoppingcenter.TagMarshaller
-import com.synacy.shoppingcenter.LocationMarshaller
+import com.synacy.shoppingcenter.ValidationErrorMarshaller
 
 class BootStrap {
 
@@ -13,6 +13,6 @@ class BootStrap {
     private void initializeMarshallers() {
         new ShopMarshaller().register()
         new TagMarshaller().register()
-        new LocationMarshaller().register()
+        new ValidationErrorMarshaller().register()
     }
 }

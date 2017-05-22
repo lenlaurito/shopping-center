@@ -9,7 +9,7 @@ class ShopController implements ErrorHandlingTrait {
 
     ShopService shopService
 
-    def index() {
+    def fetchAllShops() {
         Integer offset = params.offset ? Integer.parseInt(params.offset) : ShopService.DEFAULT_PAGINATION_OFFSET
         Integer max = params.max ? Integer.parseInt(params.max) : ShopService.DEFAULT_PAGINATION_MAX
         String tagName = params.tagName ?: ""
@@ -22,44 +22,67 @@ class ShopController implements ErrorHandlingTrait {
         respond(paginatedShoptDetails)
     }
 
-    def create() {
+    def createShop() {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
-        List<Long> tags = request.JSON.tags ?: []
+        List<Long> tags = request.JSON.tags ?: null
+        List<Location> locations = request.JSON.locations?.each {
+            if (it)
+                Location.valueOfLocation(it)
+        } ?: null
 
-        def tmp = request.JSON.locations ?: []
+        Shop createdShop = shopService.createShop(name, description, tags, locations)
 
-        List<Location> locations = []
+        respond(createdShop, [status: HttpStatus.CREATED])
 
-        tmp.each {
-            locations.add(Location.valueOfLocation(it))
-        }
-
-        Shop shop = shopService.createNewShop(name, description, tags, locations)
-
-        respond(shop, [status: HttpStatus.CREATED])
     }
 
-    def view(Long shopId) {
+    def viewShop(Long shopId) {
         Shop shop = shopService.fetchShopById(shopId)
 
         respond(shop)
     }
 
-    def update(Long shopId) {
+    def updateShop(Long shopId) {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
         List<Long> tags = request.JSON.tags ?: null
+        List<Location> locations = request.JSON.locations?.each {
+            if (it)
+                Location.valueOfLocation(it)
+        } ?: null
 
-        Shop shop = shopService.updateShop(shopId, name, description, tags)
+        Shop updatedShop = shopService.updateShop(shopId, name, description, tags, locations)
 
-        respond(shop)
+        respond(updatedShop)
     }
 
-    def delete(Long shopId) {
+    def deleteShop(Long shopId) {
 
         shopService.deleteShopById(shopId)
 
         render(status: HttpStatus.NO_CONTENT)
     }
+
+    /*
+    private def validateAndGetTagsFromJsonArray(t) {
+        if (!t)
+            return null
+
+        def tagsErrorMessages = []
+
+        List<Tag> tags = t.each {
+            try {
+                tagService.fetchTagById(it)
+            } catch(Exception e) {
+                tagsErrorMessages.add(e.getMessage())
+            }
+        }
+
+        if (tagsErrorMessages)
+            throw new InvalidRequestException((tagsErrorMessages as JSON).toString())
+
+        return tags
+    }
+    */
 }

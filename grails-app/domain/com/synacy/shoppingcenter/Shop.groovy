@@ -8,6 +8,10 @@ class Shop {
 
 	static constraints = {
 		description nullable: true
+		name maxSize: 255
+		description maxSize: 255
+		tags maxSize: 5
+		locations maxSize: 1
 	}
 
 	static mapping = {

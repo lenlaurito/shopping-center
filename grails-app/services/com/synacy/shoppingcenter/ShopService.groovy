@@ -11,6 +11,12 @@ class ShopService {
     TagService tagService
 
     public List<Shop> fetchAllShops(Integer offset, Integer max, String tagName) {
+        return Shop.findAll().find {
+            it.tags.find {
+                it.id == Long.parseLong(tagName)
+            }
+        }
+        /*
         def matches = Shop.withCriteria() {
             createAlias('tags', 't' , CriteriaSpecification.LEFT_JOIN)
             like("t.name", "%"+ tagName +"%")
@@ -23,39 +29,30 @@ class ShopService {
         resultSet.addAll(matches)
 
         return new ArrayList<>(resultSet)
+        */
     }
 
     public Integer fetchTotalNumberOfShops() {
         return Shop.count()
     }
 
-    public Shop createNewShop(String name, String description, List<Long> tags, List<Location> locations) {
-        Shop shop = new Shop()
+    public Shop createShop(String name, String description, List<Long> tags, List<Location> locations) {
+        Shop shop = new Shop(name: name, description: description)
 
-        shop.setName(name)
-        shop.setDescription(description)
+        shop.tags = []
         shop.locations = []
 
-        locations.each {
-            shop.addToLocations(it)
+        tags?.each {
+            shop.addToTags(tagService.fetchTagById(it))
         }
 
-
-        StringBuilder builder = new StringBuilder()
-
-        tags.each {
-            try {
-                shop.addToTags(tagService.fetchTagById(it))
-            } catch(ResourceNotFoundException e) {
-                builder.append(e.getMessage()).append("\n")
-            }
+        locations?.each {
+            def location = Location.valueOfLocation(it)
+            if (location)
+                shop.addToLocations(location)
+            else
+                throw new InvalidRequestException("invalid location: " + it)
         }
-
-        if (builder.length() > 0)
-            throw new InvalidRequestException(builder.toString())
-
-        if (shop.tags && shop.tags.size() > 5)
-            throw new InvalidRequestException("maximum tags limit reached")
 
         return shop.save()
     }
@@ -70,29 +67,26 @@ class ShopService {
         return shop
     }
 
-    public Shop updateShop(Long shopId, String name, String description, List<Long> tags) {
+    public Shop updateShop(Long shopId, String name, String description, List<Long> tags, List<Location> locations) {
         Shop shop = fetchShopById(shopId)
 
-        shop.setName(name)
-        shop.setDescription(description)
+        shop.name = name
+        shop.description = description
 
         shop.tags = []
+        shop.locations = []
 
-        StringBuilder builder = new StringBuilder()
-
-        tags.each {
-            try {
-                shop.addToTags(tagService.fetchTagById(it))
-            } catch(ResourceNotFoundException e) {
-                builder.append(e.getMessage()).append("\n")
-            }
+        tags?.each {
+            shop.addToTags(tagService.fetchTagById(it))
         }
 
-        if (builder.length() > 0)
-            throw new InvalidRequestException(builder.toString())
-
-        if (shop.tags.size() > 5)
-            throw new InvalidRequestException("maximum tags limit reached");
+        locations?.each {
+            def location = Location.valueOfLocation(it)
+            if (location)
+                shop.addToLocations(location)
+            else
+                throw new InvalidRequestException("invalid location: " + it)
+        }
 
         return shop.save()
     }

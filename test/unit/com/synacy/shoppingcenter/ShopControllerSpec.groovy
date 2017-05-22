@@ -9,9 +9,10 @@ import org.springframework.http.HttpStatus
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(ShopController)
+@Mock(Shop)
 class ShopControllerSpec extends Specification {
 
-    ShopService shopService = Mock();
+    ShopService shopService = Mock()
     def setup() {
 
         controller.shopService = shopService
@@ -20,7 +21,7 @@ class ShopControllerSpec extends Specification {
     def cleanup() {
     }
 
-    void "index should respond with all the shops"() {
+    void "fetchAllShops should respond with all the shops"() {
         given:
         Integer offset = ShopService.DEFAULT_PAGINATION_OFFSET
         Integer max = ShopService.DEFAULT_PAGINATION_MAX
@@ -32,7 +33,7 @@ class ShopControllerSpec extends Specification {
 
 
         when:
-        controller.index()
+        controller.fetchAllShops()
 
         then:
         1 * shopService.fetchAllShops(offset, max, tagName) >> [shop1, shop2]
@@ -49,7 +50,7 @@ class ShopControllerSpec extends Specification {
     }
 
 
-    void "index paginated should_respond with paginated the shops"() {
+    void "fetchAllShops when paginated should_respond with paginated the shops"() {
         given:
 
         String tagName = ''
@@ -61,7 +62,7 @@ class ShopControllerSpec extends Specification {
         Shop shop2 = new Shop(name: "shop 2", description: "shop 2 descripiton")
 
         when:
-        controller.index()
+        controller.fetchAllShops()
 
         then:
         1 * shopService.fetchAllShops(0, 1, '') >> [shop1]
@@ -75,72 +76,66 @@ class ShopControllerSpec extends Specification {
         response.json.records.get(0).description == shop1.description
     }
 
-    void "create without tags should respond with new created shop with no related_tags"() {
+    void "createShop without tags should respond with new created shop with no related_tags"() {
         given:
-        String name = "sample"
-        String description = "sample"
-        List<Long> tags = []
-        List<Location> locations = []
 
-        request.json = [name: name, description: description]
+        request.json = [name: "sample", description: "sample"]
 
-        Shop shop = new Shop(name: name, description: description)
+        Shop shop = new Shop(name: "sample", description:  "sample", tags: null, locations: null)
 
         when:
-        controller.create()
+        controller.createShop()
 
         then:
-        1 * shopService.createNewShop(name, description, tags, locations) >> shop
+        1 * shopService.createShop("sample", "sample", null, null) >> shop
 
         then:
         response.status == HttpStatus.CREATED.value()
-        response.json.name == name
-        response.json.description == description
+        response.json.name == "sample"
+        response.json.description == "sample"
         response.json.tags ?: null == null
         response.json.locations ?: null == null
     }
 
-    void "create with tags and location should respond with new created shop with related tags and location"() {
+    void "createShop with tags and location should respond with new created shop with related tags and location"() {
         given:
         String name = "sample"
         String description = "sample"
+        def tagIds = [1]
+        def locString = ["FIRST_FLOOR"]
 
-        request.json = [name: name, description: description, tags: [1], locations: ["FIRST_FLOOR"]]
-
-        Shop shop = new Shop(name: name, description: description)
+        request.json = [name: name, description: description, tags: tagIds, locations: locString]
 
         Tag tag1 = new Tag(name: "name")
         Tag tag2 = new Tag(name: "name")
 
-        List<Tag> tags = [tag1, tag2]
-        shop.tags = tags
-        shop.locations = [Location.FIRST_FLOOR]
+        def tags = [tag1]
+        def locations = [Location.FIRST_FLOOR]
+
+        Shop shop = new Shop(name: name, description: description, tags: tags, locations: locations)
 
         when:
-        controller.create()
+        controller.createShop()
 
         then:
-        1 * shopService.createNewShop(name, description, [1], [Location.FIRST_FLOOR]) >> shop
+        1 * shopService.createShop("sample", "sample",  tagIds, locString) >> shop
 
         then:
         response.status == HttpStatus.CREATED.value()
-        response.json.name == name
-        response.json.description == description
-        response.json.tags.get(0).id ?: null == tags.get(0).id
-        response.json.tags.get(0).name == tags.get(0).name
-        response.json.tags.get(1).id ?: null == tags.get(1).id
-        response.json.tags.get(1).name == tags.get(1).name
+        response.json.name == "sample"
+        response.json.description == "sample"
+        response.json.tags.get(0).name == "name"
         response.json.locations.length() == 1
         response.json.locations.get(0).name == "FIRST_FLOOR"
     }
 
-    void "view should find existing shop by id"() {
+    void "viewShop should find existing shop by id"() {
         given:
         Long idToFind = 1L
         Shop shop = new Shop(name: "sample", description: "description")
 
         when:
-        controller.view(idToFind)
+        controller.viewShop(idToFind)
 
         then:
         1 * shopService.fetchShopById(idToFind) >> shop
@@ -151,12 +146,12 @@ class ShopControllerSpec extends Specification {
         response.json.description == "description"
     }
 
-    void "view on non existing shop should result to 404 response status"() {
+    void "viewShop on non existing shop should result to 404 response status"() {
         given:
         Long idToFind = 123L
 
         when:
-        controller.view(idToFind)
+        controller.viewShop(idToFind)
 
         then:
         1 * shopService.fetchShopById(idToFind) >> null
@@ -165,7 +160,7 @@ class ShopControllerSpec extends Specification {
         response.status == HttpStatus.NOT_FOUND.value()
     }
 
-    void "update should update the shop with"() {
+    void "updateShop should update the shop with"() {
         given:
 
         Long idToFind = 123L
@@ -184,10 +179,10 @@ class ShopControllerSpec extends Specification {
 
 
         when:
-        controller.update(idToFind)
+        controller.updateShop(idToFind)
 
         then:
-        1 * shopService.updateShop(idToFind, name, description, tagIds) >> shop
+        1 * shopService.updateShop(idToFind, name, description, tagIds, null) >> shop
 
         then:
         response.status == HttpStatus.OK.value()
@@ -197,12 +192,12 @@ class ShopControllerSpec extends Specification {
         response.json.tags.get(0).name == tags.get(0).name
     }
 
-    void "delete should delete the shop"() {
+    void "deleteShop should delete the shop"() {
         given:
         Long idToFind = 123L
 
         when:
-        controller.delete(idToFind)
+        controller.deleteShop(idToFind)
 
         then:
         1 * shopService.deleteShopById(idToFind)

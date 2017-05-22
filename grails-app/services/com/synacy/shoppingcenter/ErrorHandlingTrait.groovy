@@ -1,8 +1,13 @@
 package com.synacy.shoppingcenter
 
 import org.springframework.http.HttpStatus
+import grails.validation.ValidationException
 
 trait ErrorHandlingTrait  {
+
+    def handleValidatioException(ValidationException e) {
+        respond(e)
+    }
 
     def handleResourceNotFoundException(ResourceNotFoundException e) {
         response.status = HttpStatus.NOT_FOUND.value()
