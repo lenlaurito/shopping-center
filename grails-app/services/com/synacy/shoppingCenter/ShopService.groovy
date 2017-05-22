@@ -58,7 +58,7 @@ class ShopService {
 
     void deleteShop(Long shopId){
         Shop shopToBeDeleted = fetchShopById(shopId)
-        shopToBeDeleted.delete()
+        if(shopToBeDeleted){shopToBeDeleted.delete()}
     }
 
     List<Tag> shopTagValidator(List<Long> tagIds){
