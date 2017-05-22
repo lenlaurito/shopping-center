@@ -1,7 +1,6 @@
 package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.InvalidDataPassed
-import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -9,11 +8,11 @@ import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-@TestFor(ShopServiceImpl)
+@TestFor(ShopService)
 @Mock([Shop, Tag])
-class ShopServiceImplSpec extends Specification {
+class ShopServiceSpec extends Specification {
 
-    TagServiceImpl tagServiceImpl = Mock()
+    TagService tagServiceImpl = Mock()
 
     def setup() {
         service.tagService = tagServiceImpl

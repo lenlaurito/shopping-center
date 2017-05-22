@@ -11,17 +11,17 @@ import spock.lang.Specification
 @TestFor(TagController)
 class TagControllerSpec extends Specification {
 
-    TagServiceImpl tagServiceImpl = Mock()
+    TagService tagService = Mock()
 
     def setup() {
-        controller.tagService = tagServiceImpl
+        controller.tagService = tagService
     }
 
     void "fetchTag should respond with the Tag with the given id"(){
         given:
             Long tagId = 1L
             Tag tag = new Tag(name: "Jewelry")
-            tagServiceImpl.fetchTagById(tagId) >> tag
+            tagService.fetchTagById(tagId) >> tag
 
         when:
             controller.fetchTag(tagId)
@@ -31,19 +31,19 @@ class TagControllerSpec extends Specification {
             response.json.name == "Jewelry"
     }
 
-    void "fetchTagById no tag found should throw NoContentFoundException"(){
+    void "fetchTag no tag found should throw NoContentFoundException"(){
         when:
             controller.fetchTag(1L)
 
         then:
-            NoContentFoundException exception = thrown()
+           response.status ==  HttpStatus.NOT_FOUND.value()
     }
 
     void "fetchAllTag should respond with all the Tags"(){
         given:
             Tag tag1 = new Tag(name: "Jewelry")
             Tag tag2 = new Tag(name: "Clothes")
-            tagServiceImpl.fetchAllTag() >> [tag1, tag2]
+            tagService.fetchAllTag() >> [tag1, tag2]
 
         when:
             controller.fetchAllTag()
@@ -60,7 +60,7 @@ class TagControllerSpec extends Specification {
             String tagName = "Jewelry"
             request.json = [name: tagName]
             Tag tag = new Tag(name: tagName)
-            tagServiceImpl.createTag(tagName) >> tag
+            tagService.createTag(tagName) >> tag
 
         when:
             controller.createTag()
@@ -78,7 +78,7 @@ class TagControllerSpec extends Specification {
             controller.createTag()
 
         then:
-            response.status == HttpStatus.NOT_ACCEPTABLE.value()
+            response.status == HttpStatus.BAD_REQUEST.value()
     }
 
     void "updateTag should respond with the update Tag and its details"(){
@@ -87,7 +87,7 @@ class TagControllerSpec extends Specification {
             String tagName = "Jewelry"
             request.json = [name: tagName]
             Tag tag = new Tag(name: tagName)
-            tagServiceImpl.updateTag(tagId, tagName) >> tag
+            tagService.updateTag(tagId, tagName) >> tag
 
         when:
             controller.updateTag(tagId)
@@ -113,7 +113,7 @@ class TagControllerSpec extends Specification {
             controller.removeTag(1L)
 
         then:
-            1 * tagServiceImpl.deleteTag(1L)
+            1 * tagService.deleteTag(1L)
             response.status == HttpStatus.NO_CONTENT.value()
     }
 }

@@ -1,17 +1,45 @@
 package com.synacy.shoppingCenter
 
-/**
- * Created by steven on 5/21/17.
- */
-interface TagService {
+import com.synacy.shoppingCenter.exception.DataConflictException
+import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
+import grails.transaction.Transactional
 
-    Tag fetchTagById(Long tagId)
+@Transactional
+class TagService {
 
-    List<Tag> fetchAllTag()
+    Tag fetchTagById(Long tagId){
+        return Tag.findById(tagId)
+    }
 
-    Tag createTag(String tagName)
+    List<Tag> fetchAllTag(){
+        List<Tag> tagList = Tag.findAll()
+        return tagList
+    }
 
-    Tag updateTag(Long tagId, String tagName)
+    Tag createTag(String tagName){
+        Tag checkTagName = Tag.findByName(tagName)
+        if(checkTagName){throw new EntityAlreadyExistsException("Tag Name Already Exists")}
 
-    void deleteTag(Long tagId)
+        Tag tag = new Tag()
+        tag.name = tagName
+        tag.shops = []
+        tag.save()
+        return tag
+    }
+
+    Tag updateTag(Long tagId, String tagName){
+        Tag checkTagName = Tag.findByName(tagName)
+        if(checkTagName){throw new EntityAlreadyExistsException("Tag Name Already Exists")}
+
+        Tag tagToBeUpdated = fetchTagById(tagId)
+        tagToBeUpdated.name = tagName
+        return tagToBeUpdated.save()
+    }
+
+    void deleteTag(Long tagId){
+        Tag tagToBeDeleted = fetchTagById(tagId)
+        if(tagToBeDeleted.shops){throw new DataConflictException("Tag still in use")}
+        tagToBeDeleted.delete()
+    }
+
 }

@@ -1,21 +1,74 @@
 package com.synacy.shoppingCenter
 
-/**
- * Created by steven on 5/21/17.
- */
-interface ShopService {
+import com.synacy.shoppingCenter.exception.InvalidDataPassed
+import com.synacy.shoppingCenter.exception.NoContentFoundException
+import grails.transaction.Transactional
 
-    Shop fetchShopById(Long shopId)
+@Transactional
+class ShopService {
 
-    List<Shop> fetchShops(Integer max, Integer offset, Long tagId)
+    TagService tagService
 
-    Integer fetchTotalNumberOfShops()
+    Shop fetchShopById(Long shopId){
+        return Shop.findById(shopId)
+    }
 
-    Shop createShop(String shopName, String shopDescription, Integer location, List<Long> tagIds)
+    List<Shop> fetchShops(Integer max, Integer offset, Long tagId) {
+        List<Shop> shopList = null
 
-    Shop updateShop(Long shopId, String shopName, String shopDescription, Integer location, List<Long> tagIds)
+        if(tagId) {
+            def tag = tagService.fetchTagById(tagId)
+            if(!tag){ throw new NoContentFoundException("This tag does not exist.") }
+            shopList = Shop.createCriteria().list(max: max, offset: offset) {
+                tags {eq('id', tag.id)}
+                order('id', 'asc')
+            }
+        }
+        else { shopList = Shop.list([offset: offset, max: max, sort: "id", order: "asc"]) }
+        return shopList
+    }
 
-    void deleteShop(Long shopId)
+    Integer fetchTotalNumberOfShops() {
+        return Shop.count()
+    }
 
-    List<Tag> shopTagValidator(List<Long> tagIds)
+    Shop createShop(String shopName, String shopDescription, Integer location, List<Long> tagIds){
+        List<Tag> tags = shopTagValidator(tagIds)
+
+        Shop shop = new Shop()
+        shop.name = shopName
+        shop.description = shopDescription
+        shop.location = location
+        shop.tags = tags
+
+        return shop.save()
+    }
+
+    Shop updateShop(Long shopId, String shopName, String shopDescription, Integer location, List<Long> tagIds){
+        List<Tag> tags = shopTagValidator(tagIds)
+
+        Shop shopToBeUpdated = fetchShopById(shopId)
+        shopToBeUpdated.name = shopName
+        shopToBeUpdated.description = shopDescription
+        shopToBeUpdated.location = location
+        shopToBeUpdated.tags = tags
+
+        return shopToBeUpdated.save()
+    }
+
+    void deleteShop(Long shopId){
+        Shop shopToBeDeleted = fetchShopById(shopId)
+        shopToBeDeleted.delete()
+    }
+
+    List<Tag> shopTagValidator(List<Long> tagIds){
+        tagIds.unique()
+        List<Tag> tagList = []
+        for(Long id : tagIds){
+            Tag tag = tagService.fetchTagById(id)
+            if(tag){tagList.add(tag)}
+            else{throw new InvalidDataPassed("A passed Tag doesn't exist in the database")}
+        }
+        return  tagList
+    }
 }

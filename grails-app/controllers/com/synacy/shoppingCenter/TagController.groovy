@@ -9,23 +9,23 @@ class TagController implements ExceptionHandlerTrait{
 
     static responseFormats = ['json']
 
-    TagServiceImpl tagServiceImpl
+    TagService tagService
 
     def fetchTag(Long tagId){
-        Tag tag = tagServiceImpl.fetchTagById(tagId)
+        Tag tag = tagService.fetchTagById(tagId)
         if(!tag){ throw new NoContentFoundException("No Tag with the Id found")}
         respond(tag)
     }
 
     def fetchAllTag(){
-        respond(tagServiceImpl.fetchAllTag())
+        respond(tagService.fetchAllTag())
     }
 
     def createTag(){
         String name = request.JSON.name ?: null
         if(!name) { throw new InvalidDataPassed("Tag name in not nullable")}
 
-        Tag tag = tagServiceImpl.createTag(name)
+        Tag tag = tagService.createTag(name)
         respond(tag, status: HttpStatus.CREATED)
     }
 
@@ -33,12 +33,12 @@ class TagController implements ExceptionHandlerTrait{
         String name = request.JSON.name ?: null
         if(!name) { throw new InvalidDataPassed("Tag name in not nullable")}
 
-        Tag tag = tagServiceImpl.updateTag(tagId,name)
+        Tag tag = tagService.updateTag(tagId,name)
         respond(tag)
     }
 
     def removeTag(Long tagId){
-        tagServiceImpl.deleteTag(tagId)
+        tagService.deleteTag(tagId)
         render(status: HttpStatus.NO_CONTENT)
     }
 

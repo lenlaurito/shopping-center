@@ -11,17 +11,17 @@ import spock.lang.Specification
 @TestFor(ShopController)
 class ShopControllerSpec extends Specification {
 
-    ShopServiceImpl shopServiceImpl = Mock()
+    ShopService shopService = Mock()
 
     def setup() {
-        controller.shopService = shopServiceImpl
+        controller.shopService = shopService
     }
 
     void "fetchShop should respond with the Shop with the given id"(){
         given:
             Long shopId = 1L
             Shop shop = new Shop(name: "shopName", description: "shopDescription", location: 1, tags: [])
-            shopServiceImpl.fetchShopById(shopId) >> shop
+            shopService.fetchShopById(shopId) >> shop
 
         when:
             controller.fetchShop(shopId)
@@ -39,7 +39,7 @@ class ShopControllerSpec extends Specification {
             controller.fetchShop(1L)
 
         then:
-            NoContentFoundException exception = thrown()
+            response.status ==  HttpStatus.NOT_FOUND.value()
     }
 
     void "fetchAllShop should respond with all the List of all the Shops"(){
@@ -56,8 +56,8 @@ class ShopControllerSpec extends Specification {
             Integer max = Integer.parseInt(params.max)
             Long tagId = Long.parseLong(params.tagId)
 
-            shopServiceImpl.fetchShops(max, offset, tagId) >> shopList
-            shopServiceImpl.fetchTotalNumberOfShops() >> 2
+            shopService.fetchShops(max, offset, tagId) >> shopList
+            shopService.fetchTotalNumberOfShops() >> 2
 
         when:
             controller.fetchAllShop()
@@ -83,7 +83,7 @@ class ShopControllerSpec extends Specification {
         when:
             controller.createShop()
         then:
-            1 * shopServiceImpl.createShop(name, description, location, tagIds) >> shop
+            1 * shopService.createShop(name, description, location, tagIds) >> shop
         then:
             response.status == HttpStatus.CREATED.value()
             response.json.name == shop.name
@@ -118,7 +118,7 @@ class ShopControllerSpec extends Specification {
             request.json = [name: shopName, description: shopDescription, location: location, tagIds: tagIds]
 
             Shop shop = new Shop(name: shopName, description: shopDescription, location: location, tagIds: tagIds)
-            shopServiceImpl.updateShop(shopId, shopName, shopDescription, location, tagIds) >> shop
+            shopService.updateShop(shopId, shopName, shopDescription, location, tagIds) >> shop
 
         when:
             controller.updateShop(shopId)
@@ -151,7 +151,7 @@ class ShopControllerSpec extends Specification {
             controller.removeShop(1L)
 
         then:
-            1 * shopServiceImpl.deleteShop(1L)
+            1 * shopService.deleteShop(1L)
             response.status == HttpStatus.NO_CONTENT.value()
     }
 }

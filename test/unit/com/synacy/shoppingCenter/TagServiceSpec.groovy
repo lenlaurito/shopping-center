@@ -2,7 +2,6 @@ package com.synacy.shoppingCenter
 
 import com.synacy.shoppingCenter.exception.DataConflictException
 import com.synacy.shoppingCenter.exception.EntityAlreadyExistsException
-import com.synacy.shoppingCenter.exception.NoContentFoundException
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -10,9 +9,9 @@ import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-@TestFor(TagServiceImpl)
+@TestFor(TagService)
 @Mock([Tag, Shop])
-class TagServiceImplSpec extends Specification {
+class TagServiceSpec extends Specification {
 
     void "fetchTagById should return the tag with the given id"(){
         given:

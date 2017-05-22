@@ -9,10 +9,10 @@ class ShopController implements ExceptionHandlerTrait{
 
     static responseFormats = ['json']
 
-    ShopServiceImpl shopServiceImpl
+    ShopService shopService
 
     def fetchShop(Long shopId){
-        Shop shop = shopServiceImpl.fetchShopById(shopId)
+        Shop shop = shopService.fetchShopById(shopId)
         if(!shop){ throw new NoContentFoundException("No Shop with the Id found") }
         respond(shop)
     }
@@ -22,10 +22,10 @@ class ShopController implements ExceptionHandlerTrait{
         Integer offset = params.offset ? Integer.parseInt(params.offset) : null
         Long tagId = params.tagId ? Long.parseLong(params.tagId) : null
 
-        if(max < 0 || offset < 0) throw new InvalidDataPassed("Offset and Max can't be a negative value")
+        if((max != null || offset != null) && (max < 0 || offset < 0)) throw new InvalidDataPassed("Offset and Max can't be a negative value")
 
-        List<Shop> shopList = shopServiceImpl.fetchShops(max, offset, tagId)
-        Integer shopCount = shopServiceImpl.fetchTotalNumberOfShops()
+        List<Shop> shopList = shopService.fetchShops(max, offset, tagId)
+        Integer shopCount = shopService.fetchTotalNumberOfShops()
         Map<String, Object> shopDetails = [totalRecords: shopCount, records: shopList]
 
         respond(shopDetails)
@@ -37,11 +37,11 @@ class ShopController implements ExceptionHandlerTrait{
         Integer location = request.JSON.location ?: null
         List<Long> tagIds = request.JSON.tags ?: null
 
-        if(!name || !description || !location){throw new InvalidDataPassed("Invalid Request Body. Name, description and location must not be nul")}
+        if(!name || !location){throw new InvalidDataPassed("Invalid Request Body. Name, description and location must not be nul")}
         if((tagIds ? tagIds.size():0) > 5){throw new InvalidDataPassed("Invalid Tag Size, Maximum should be 5")}
         if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location value used")}
 
-        Shop shop = shopServiceImpl.createShop(name, description, location, tagIds)
+        Shop shop = shopService.createShop(name, description, location, tagIds)
         respond(shop, [status: HttpStatus.CREATED])
     }
 
@@ -55,12 +55,12 @@ class ShopController implements ExceptionHandlerTrait{
         if((tagIds ? tagIds.size():0) > 5){throw new InvalidDataPassed("Invalid Tag Size, Maximum should be 5")}
         if(location < 1 || location > 4){throw new InvalidDataPassed("Invalid location value used")}
 
-        Shop shop = shopServiceImpl.updateShop(shopId, name, description, location, tagIds)
+        Shop shop = shopService.updateShop(shopId, name, description, location, tagIds)
         respond(shop)
     }
 
     def removeShop(Long shopId){
-        shopServiceImpl.deleteShop(shopId)
+        shopService.deleteShop(shopId)
         render(status: HttpStatus.NO_CONTENT)
     }
 
