@@ -8,19 +8,6 @@ import javax.naming.LimitExceededException
 
 trait ExceptionHandlingTrait {
 
-    def handleValidationException(ValidationException e) {
-        response.status = HttpStatus.BAD_REQUEST.value()
-
-        String message = ""
-
-        if(e.getMessage().contains("cannot be null")) {
-            message = "Name field cannot be null"
-        } else {
-            message = "Tag name already exist"
-        }
-
-        respond([error: message])
-    }
 
     def handleResourceNotFoundException(ResourceNotFoundException e) {
         response.status = HttpStatus.NOT_FOUND.value()
@@ -33,7 +20,12 @@ trait ExceptionHandlingTrait {
     }
 
     def handleInvalidLocationException(InvalidLocationException e) {
-        response.status = HttpStatus.NOT_FOUND.value()
+        response.status = HttpStatus.BAD_REQUEST.value()
+        respond([error: e.getMessage()])
+    }
+
+    def handleNullPointerException(NullPointerException e) {
+        response.status = HttpStatus.BAD_REQUEST.value()
         respond([error: e.getMessage()])
     }
 
