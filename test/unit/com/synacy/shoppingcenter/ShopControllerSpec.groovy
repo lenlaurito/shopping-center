@@ -25,7 +25,7 @@ class ShopControllerSpec extends Specification {
         given:
         Integer offset = ShopService.DEFAULT_PAGINATION_OFFSET
         Integer max = ShopService.DEFAULT_PAGINATION_MAX
-        String tagName = ''
+        Long tagId = null
 
 
         Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton")
@@ -36,7 +36,7 @@ class ShopControllerSpec extends Specification {
         controller.fetchAllShops()
 
         then:
-        1 * shopService.fetchAllShops(offset, max, tagName) >> [shop1, shop2]
+        1 * shopService.fetchAllShops(offset, max, tagId) >> [shop1, shop2]
         1 * shopService.fetchTotalNumberOfShops() >> 2
 
         then:
@@ -53,7 +53,7 @@ class ShopControllerSpec extends Specification {
     void "fetchAllShops when paginated should_respond with paginated the shops"() {
         given:
 
-        String tagName = ''
+        Long tagId = null
 
         params.offset = "0"
         params.max = "1"
@@ -65,7 +65,7 @@ class ShopControllerSpec extends Specification {
         controller.fetchAllShops()
 
         then:
-        1 * shopService.fetchAllShops(0, 1, '') >> [shop1]
+        1 * shopService.fetchAllShops(0, 1, tagId) >> [shop1]
         1 * shopService.fetchTotalNumberOfShops() >> 2
 
         then:

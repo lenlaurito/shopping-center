@@ -53,7 +53,7 @@ class ShopServiceSpec extends Specification {
         shop3.save()
 
         when:
-        List<Shop> shops = service.fetchAllShops(offset, max)
+        List<Shop> shops = service.fetchAllShops(offset, max, null)
 
         then:
         shops.size() == 1
@@ -71,10 +71,11 @@ class ShopServiceSpec extends Specification {
         tag1.save()
         tag2.save()
 
-        List<Long> tagIds = [tag1.id, tag2.id]
+        def tagIds = [tag1.id, tag2.id]
+        def locations = ["FIRST_FLOOR"]
 
         when:
-        Shop createdShop = service.createNewShop(name, description, tagIds)
+        Shop createdShop = service.createShop(name, description, tagIds, locations)
 
 
         then:
@@ -122,7 +123,7 @@ class ShopServiceSpec extends Specification {
 
 
         when:
-        Shop updatedShop = service.updateShop(shopId, "new name", "shop 1 descripiton", [tag2.id])
+        Shop updatedShop = service.updateShop(shopId, "new name", "shop 1 descripiton", [tag2.id], null)
 
 
         then:

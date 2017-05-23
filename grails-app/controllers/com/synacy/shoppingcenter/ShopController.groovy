@@ -12,9 +12,9 @@ class ShopController implements ErrorHandlingTrait {
     def fetchAllShops() {
         Integer offset = params.offset ? Integer.parseInt(params.offset) : ShopService.DEFAULT_PAGINATION_OFFSET
         Integer max = params.max ? Integer.parseInt(params.max) : ShopService.DEFAULT_PAGINATION_MAX
-        String tagName = params.tagName ?: ""
+        Long tagId = params.tagId ? Integer.parseInt(params.tagId)?.longValue() : null
 
-        List<Shop> shops = shopService.fetchAllShops(offset, max, tagName)
+        List<Shop> shops = shopService.fetchAllShops(offset, max, tagId)
 
         Integer shopCount = shopService.fetchTotalNumberOfShops()
         Map<String, Object> paginatedShoptDetails = [totalRecords: shopCount, records: shops]

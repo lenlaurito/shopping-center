@@ -10,16 +10,29 @@ class ShopService {
 
     TagService tagService
 
-    public List<Shop> fetchAllShops(Integer offset, Integer max, String tagName) {
-        return Shop.findAll().find {
-            it.tags.find {
-                it.id == Long.parseLong(tagName)
+    public List<Shop> fetchAllShops(Integer offset, Integer max, Long tagId) {
+
+        if(tagId) {
+            def tag = tagService.fetchTagById(tagId)
+
+            if(!tag) {
+                throw new ResourceNotFoundException("This tag does not exist.")
+            }else {
+                return Shop.createCriteria().list(max: max, offset: offset) {
+                    tags {
+                        eq('id', tag.id)
+                    }
+                    order('id', 'asc')
+                }
             }
+        }else {
+            //throw ResourceNotFoundException(tagId)
+            return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
         }
         /*
         def matches = Shop.withCriteria() {
             createAlias('tags', 't' , CriteriaSpecification.LEFT_JOIN)
-            like("t.name", "%"+ tagName +"%")
+            eq("t.id", tagId)
             order("name", "asc")
             firstResult offset
             maxResults max
