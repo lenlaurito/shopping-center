@@ -41,8 +41,10 @@ class TagController implements RestExceptionHandler {
 	}
 
 	def updateTag(Long tagId) {
+		if (!tagId) {
+			throw new InvalidRequestException("Unable to parse id.")
+		}
 		String name = request.JSON.name ?: null
-
 		if (!name) {
 			throw new InvalidRequestException("Missing required parameter.")
 		}
@@ -59,6 +61,9 @@ class TagController implements RestExceptionHandler {
 	}
 
 	def removeTag(Long tagId) {
+		if (!tagId) {
+			throw new InvalidRequestException("Unable to parse id.")
+		}
 		Tag tag = tagService.fetchTagById(tagId)
 		try {
 			tagService.deleteTag(tag)

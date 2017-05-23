@@ -33,12 +33,8 @@ class ShopController implements RestExceptionHandler {
 		} catch (NumberFormatException e) {
 			throw new InvalidRequestException("Unable to parse params.")
 		}
-
-		Tag tag
-		if (tagId) {
-			tag = tagService.fetchTagById(tagId)
-		}
-		List<Shop> shops = shopService.fetchShops(tag?:null, offset, max)
+		Tag tag = (tagId) ? tagService.fetchTagById(tagId) : null
+		List<Shop> shops = shopService.fetchShops(tag, offset, max)
 		Integer shopCount = shopService.fetchTotalNumberOfShops()
 		Map<String, Object> paginatedShopDetails = [totalShops: shopCount, shops: shops]
 		respond(paginatedShopDetails)
@@ -52,6 +48,40 @@ class ShopController implements RestExceptionHandler {
 		if (!name) {
 			throw new InvalidRequestException("Missing required parameter.")
 		}
+		Location location = validateLocation(request)
+		List<Tag> tags = validateTags(tagIds)
+		Shop shop = shopService.createNewShop(name, description, location, tags)
+		respond(shop, [status: HttpStatus.CREATED])
+	}
+
+	def updateShop(Long shopId) {
+		if (!shopId) {
+			throw new InvalidRequestException("Unable to parse id.")
+		}
+		String name = request.JSON.name ?: null
+		String description = request.JSON.description ?: null
+		List tagIds = request.JSON.tags
+
+		if (!name) {
+			throw new InvalidRequestException("Missing required parameter.")
+		}
+		Location location = validateLocation(request)
+		List<Tag> tags = validateTags(tagIds)
+		Shop shop = shopService.fetchShopById(shopId)
+		shop = shopService.updateShop(shop, name, description, location, tags)
+		respond(shop)
+	}
+
+	def removeShop(Long shopId) {
+		if (!shopId) {
+			throw new InvalidRequestException("Unable to parse id.")
+		}
+		Shop shop = shopService.fetchShopById(shopId)
+		shopService.deleteShop(shop)
+		render(status: HttpStatus.NO_CONTENT)
+	}
+	
+	private Location validateLocation(javax.servlet.http.HttpServletRequest request) {
 		Location location
 		if (request.JSON.location) {
 			String locationString = request.JSON.location
@@ -62,33 +92,7 @@ class ShopController implements RestExceptionHandler {
 		} else{
 			throw new InvalidRequestException("Missing required parameter.")
 		}
-		List<Tag> tags = validateTags(tagIds)
-		Shop shop = shopService.createNewShop(name, description, location, tags)
-		respond(shop, [status: HttpStatus.CREATED])
-	}
-
-	def updateShop(Long shopId) {
-		String name = request.JSON.name ?: null
-		String description = request.JSON.description ?: null
-		String locationString = request.JSON.location ?: null
-		List tagIds = request.JSON.tags
-
-		Location location = Location.valueOfLocation(locationString)
-
-		if (!name) {
-			throw new InvalidRequestException("Invalid request.")
-		}
-
-		List<Tag> tags = validateTags(tagIds)
-		Shop shop = shopService.fetchShopById(shopId)
-		shop = shopService.updateShop(shop, name, description, location, tags)
-		respond(shop)
-	}
-
-	def removeShop(Long shopId) {
-		Shop shop = shopService.fetchShopById(shopId)
-		shopService.deleteShop(shop)
-		render(status: HttpStatus.NO_CONTENT)
+		return location
 	}
 
 	private List<Tag> validateTags(List tagIds) {
