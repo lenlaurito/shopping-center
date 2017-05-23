@@ -21,9 +21,9 @@ class ShopServiceSpec extends Specification {
         Integer offset = null
         Integer max = null
 
-        Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton")
-        Shop shop2 = new Shop(name: "shop 2", description: "shop 2 descripiton")
-        Shop shop3 = new Shop(name: "shop 3", description: "shop 3 descripiton")
+        Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton", location: Location.FIRST_FLOOR)
+        Shop shop2 = new Shop(name: "shop 2", description: "shop 2 descripiton", location: Location.FIRST_FLOOR)
+        Shop shop3 = new Shop(name: "shop 3", description: "shop 3 descripiton", location: Location.FIRST_FLOOR)
 
         shop1.save()
         shop2.save()
@@ -44,9 +44,9 @@ class ShopServiceSpec extends Specification {
         Integer offset = 2
         Integer max = 1
 
-        Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton")
-        Shop shop2 = new Shop(name: "shop 2", description: "shop 2 descripiton")
-        Shop shop3 = new Shop(name: "shop 3", description: "shop 3 descripiton")
+        Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton", location: Location.FIRST_FLOOR)
+        Shop shop2 = new Shop(name: "shop 2", description: "shop 2 descripiton", location: Location.FIRST_FLOOR)
+        Shop shop3 = new Shop(name: "shop 3", description: "shop 3 descripiton", location: Location.FIRST_FLOOR)
 
         shop1.save()
         shop2.save()
@@ -64,6 +64,7 @@ class ShopServiceSpec extends Specification {
         given:
         String name = "sample"
         String description = "sample description"
+        Location location = Location.FIRST_FLOOR
 
         Tag tag1 = new Tag(name: "name")
         Tag tag2 = new Tag(name: "name")
@@ -72,10 +73,9 @@ class ShopServiceSpec extends Specification {
         tag2.save()
 
         def tagIds = [tag1.id, tag2.id]
-        def locations = ["FIRST_FLOOR"]
 
         when:
-        Shop createdShop = service.createShop(name, description, tagIds, locations)
+        Shop createdShop = service.createShop(name, description, tagIds, location)
 
 
         then:
@@ -85,12 +85,13 @@ class ShopServiceSpec extends Specification {
         createdShop.tags.getAt(0).name == tag1.name
         createdShop.tags.getAt(1).id == tag2.id
         createdShop.tags.getAt(1).name == tag2.name
+        createdShop.location == Location.FIRST_FLOOR
     }
 
     void "fetchShopById should return target shop"() {
         given:
 
-        Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton")
+        Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton", location: Location.FIRST_FLOOR)
         shop1.save()
 
         Long shopId = shop1.id
@@ -114,7 +115,7 @@ class ShopServiceSpec extends Specification {
         tag1.save()
         tag2.save()
 
-        Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton")
+        Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton", location: Location.FIRST_FLOOR)
         shop1.tags = [tag1, tag2]
 
         shop1.save()
@@ -123,7 +124,7 @@ class ShopServiceSpec extends Specification {
 
 
         when:
-        Shop updatedShop = service.updateShop(shopId, "new name", "shop 1 descripiton", [tag2.id], null)
+        Shop updatedShop = service.updateShop(shopId, "new name", "shop 1 descripiton", [tag2.id], Location.FIRST_FLOOR)
 
 
         then:
@@ -133,11 +134,12 @@ class ShopServiceSpec extends Specification {
         updatedShop.tags.size() == 1
         updatedShop.tags.getAt(0).id == tag2.id
         updatedShop.tags.getAt(0).name == tag2.name
+        updatedShop.location == Location.FIRST_FLOOR
     }
 
     void "deleteShopById should be able to delete target shop"() {
         given:
-        Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton")
+        Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton", location: Location.FIRST_FLOOR)
         shop1.save()
 
         Long shopId = shop1.id

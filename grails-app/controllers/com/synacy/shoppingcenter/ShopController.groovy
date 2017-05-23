@@ -27,9 +27,9 @@ class ShopController implements ErrorHandlingTrait {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
         def tags = request.JSON.tags ?: null
-        def locations = request.JSON.locations ?: null
+        Location location = request.JSON.location? Location.valueOfLocation(request.JSON.location) : null
 
-        Shop createdShop = shopService.createShop(name, description, tags, locations)
+        Shop createdShop = shopService.createShop(name, description, tags, location)
 
         respond(createdShop, [status: HttpStatus.CREATED])
 
@@ -45,9 +45,9 @@ class ShopController implements ErrorHandlingTrait {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
         def tags = request.JSON.tags ?: null
-        def locations = request.JSON.locations ?: null
+        Location location = request.JSON.location? Location.valueOfLocation(request.JSON.location) : null
 
-        Shop updatedShop = shopService.updateShop(shopId, name, description, tags, locations)
+        Shop updatedShop = shopService.updateShop(shopId, name, description, tags, location)
 
         respond(updatedShop)
     }

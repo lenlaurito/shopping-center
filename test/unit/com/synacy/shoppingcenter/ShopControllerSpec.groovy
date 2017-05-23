@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(ShopController)
-@Mock(Shop)
 class ShopControllerSpec extends Specification {
 
     ShopService shopService = Mock()
@@ -80,7 +79,7 @@ class ShopControllerSpec extends Specification {
 
         request.json = [name: "sample", description: "sample"]
 
-        Shop shop = new Shop(name: "sample", description:  "sample", tags: null, locations: null)
+        Shop shop = new Shop(name: "sample", description:  "sample", tags: null, location: "FIRST_FLOOR")
 
         when:
         controller.createShop()
@@ -93,17 +92,17 @@ class ShopControllerSpec extends Specification {
         response.json.name == "sample"
         response.json.description == "sample"
         response.json.tags ?: null == null
-        response.json.locations ?: null == null
+        response.json.location.name == "FIRST_FLOOR"
     }
 
     void "createShop with tags and location should respond with new created shop with related tags and location"() {
         given:
         String name = "sample"
+        String location = "FIRST_FLOOR"
         String description = "sample"
         def tagIds = [1]
-        def locString = ["FIRST_FLOOR"]
 
-        request.json = [name: name, description: description, tags: tagIds, locations: locString]
+        request.json = [name: name, description: description, tags: tagIds, location: location]
 
         Tag tag1 = new Tag(name: "name")
         Tag tag2 = new Tag(name: "name")
@@ -111,21 +110,20 @@ class ShopControllerSpec extends Specification {
         def tags = [tag1]
         def locations = [Location.FIRST_FLOOR]
 
-        Shop shop = new Shop(name: name, description: description, tags: tags, locations: locations)
+        Shop shop = new Shop(name: name, description: description, tags: tags, location: location)
 
         when:
         controller.createShop()
 
         then:
-        1 * shopService.createShop("sample", "sample",  tagIds, locString) >> shop
+        1 * shopService.createShop("sample", "sample",  tagIds, Location.valueOfLocation(location)) >> shop
 
         then:
         response.status == HttpStatus.CREATED.value()
         response.json.name == "sample"
         response.json.description == "sample"
         response.json.tags.get(0).name == "name"
-        response.json.locations.length() == 1
-        response.json.locations.get(0).name == "FIRST_FLOOR"
+        response.json.location.name == "FIRST_FLOOR"
     }
 
     void "viewShop should find existing shop by id"() {

@@ -31,23 +31,19 @@ class ShopService {
         return Shop.count()
     }
 
-    public Shop createShop(String name, String description, List<Long> tags, List<Location> locations) {
+    public Shop createShop(String name, String description, List<Long> tags, Location location) {
+        if (!location)
+            throw new InvalidRequestException("The location is invalid.")
+
         Shop shop = new Shop(name: name, description: description)
 
         shop.tags = []
-        shop.locations = []
+        shop.location = location
 
         tags?.each {
             shop.addToTags(tagService.fetchTagById(it))
         }
 
-        locations?.each {
-            def location = Location.valueOfLocation(it)
-            if (location)
-                shop.addToLocations(location)
-            else
-                throw new InvalidRequestException("invalid location: " + it)
-        }
 
         return shop.save()
     }
@@ -62,26 +58,22 @@ class ShopService {
         return shop
     }
 
-    public Shop updateShop(Long shopId, String name, String description, List<Long> tags, List<Location> locations) {
+    public Shop updateShop(Long shopId, String name, String description, List<Long> tags, Location location) {
+        if (!location)
+            throw new InvalidRequestException("The location is invalid.")
+
         Shop shop = fetchShopById(shopId)
 
         shop.name = name
         shop.description = description
+        shop.location = location
 
         shop.tags = []
-        shop.locations = []
 
         tags?.each {
             shop.addToTags(tagService.fetchTagById(it))
         }
 
-        locations?.each {
-            def location = Location.valueOfLocation(it)
-            if (location)
-                shop.addToLocations(location)
-            else
-                throw new InvalidRequestException("invalid location: " + it)
-        }
 
         return shop.save()
     }

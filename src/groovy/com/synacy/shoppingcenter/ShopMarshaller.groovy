@@ -10,13 +10,11 @@ class ShopMarshaller {
             return [
                     id          : shop.id,
                     name        : shop.name,
+                    location   : shop.location.toString(),
                     description : shop.description,
                     tags        : shop.tags.collect {
                         it.id
                     },
-                    locations   : shop.locations.collect {
-                        it.toString()
-                    }
 			]
         }
     }
