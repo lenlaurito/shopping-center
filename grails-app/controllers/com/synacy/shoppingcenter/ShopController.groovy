@@ -58,26 +58,4 @@ class ShopController implements ErrorHandlingTrait {
 
         render(status: HttpStatus.NO_CONTENT)
     }
-
-    /*
-    private def validateAndGetTagsFromJsonArray(t) {
-        if (!t)
-            return null
-
-        def tagsErrorMessages = []
-
-        List<Tag> tags = t.each {
-            try {
-                tagService.fetchTagById(it)
-            } catch(Exception e) {
-                tagsErrorMessages.add(e.getMessage())
-            }
-        }
-
-        if (tagsErrorMessages)
-            throw new InvalidRequestException((tagsErrorMessages as JSON).toString())
-
-        return tags
-    }
-    */
 }

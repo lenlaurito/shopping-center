@@ -23,23 +23,8 @@ class ShopService {
                 }
             }
         }else {
-            //throw ResourceNotFoundException(tagId)
             return Shop.list([offset: offset, max: max, sort: "id", order: "asc"])
         }
-        /*
-        def matches = Shop.withCriteria() {
-            createAlias('tags', 't' , CriteriaSpecification.LEFT_JOIN)
-            eq("t.id", tagId)
-            order("name", "asc")
-            firstResult offset
-            maxResults max
-        }
-
-        def resultSet = new HashSet()
-        resultSet.addAll(matches)
-
-        return new ArrayList<>(resultSet)
-        */
     }
 
     public Integer fetchTotalNumberOfShops() {
