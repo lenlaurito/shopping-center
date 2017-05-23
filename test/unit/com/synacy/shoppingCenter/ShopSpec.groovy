@@ -1,5 +1,6 @@
-package com.synacy.shoppingcenter
+package com.synacy.shoppingCenter
 
+import com.synacy.shoppingCenter.Shop
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 

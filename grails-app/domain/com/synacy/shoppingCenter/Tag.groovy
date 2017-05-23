@@ -1,4 +1,4 @@
-package com.synacy.shoppingcenter
+package com.synacy.shoppingCenter
 
 class Tag {
 
@@ -6,6 +6,7 @@ class Tag {
 	String name
 
 	static constraints = {
+		name(unique: true)
 	}
 
 	static mapping = {
