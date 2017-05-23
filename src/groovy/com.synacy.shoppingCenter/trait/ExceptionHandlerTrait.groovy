@@ -21,12 +21,12 @@ trait ExceptionHandlerTrait {
     }
 
     def handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
-        response.status = HttpStatus.FORBIDDEN.value()
+        response.status = HttpStatus.BAD_REQUEST.value()
         respond([error: e.getMessage()])
     }
 
     def handleDataConflictException(DataConflictException e) {
-        response.status = HttpStatus.FORBIDDEN.value()
+        response.status = HttpStatus.BAD_REQUEST.value()
         respond([error: e.getMessage()])
     }
 }
