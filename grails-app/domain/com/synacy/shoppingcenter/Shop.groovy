@@ -5,9 +5,13 @@ class Shop {
 	Long id
 	String name
 	String description
+	Location location
 
 	static constraints = {
 		description nullable: true
+		name maxSize: 255
+		description maxSize: 255
+		tags maxSize: 5
 	}
 
 	static mapping = {
