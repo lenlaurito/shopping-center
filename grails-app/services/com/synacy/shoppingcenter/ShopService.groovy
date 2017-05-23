@@ -5,9 +5,6 @@ import org.hibernate.criterion.CriteriaSpecification
 
 @Transactional
 class ShopService {
-    public static DEFAULT_PAGINATION_OFFSET = 0
-    public static DEFAULT_PAGINATION_MAX = 20
-
     TagService tagService
 
     public List<Shop> fetchAllShops(Integer offset, Integer max, Long tagId) {

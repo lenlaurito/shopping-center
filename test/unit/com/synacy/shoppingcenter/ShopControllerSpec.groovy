@@ -23,8 +23,8 @@ class ShopControllerSpec extends Specification {
 
     void "fetchAllShops should respond with all the shops"() {
         given:
-        Integer offset = ShopService.DEFAULT_PAGINATION_OFFSET
-        Integer max = ShopService.DEFAULT_PAGINATION_MAX
+        Integer offset = null
+        Integer max = null
         Long tagId = null
 
 
