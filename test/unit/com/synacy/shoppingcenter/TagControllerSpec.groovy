@@ -19,7 +19,7 @@ class TagControllerSpec extends Specification {
     def cleanup() {
     }
 
-    void "index should respond with all tags"() {
+    void "fetchAllTags should respond with all tags"() {
         given:
 
         Tag tag1 = new Tag(name: "tag 1")
@@ -41,7 +41,7 @@ class TagControllerSpec extends Specification {
         } != null
     }
 
-    void "create should respond with new created tag"() {
+    void "createTag should respond with new created tag"() {
         given:
         String tagName = "sample"
 
@@ -60,7 +60,7 @@ class TagControllerSpec extends Specification {
         response.json.name == tagName
     }
 
-    void "view should respond with the target tag to be fetched"() {
+    void "viewTag should respond with the target tag to be fetched"() {
         given:
         Long idToFind = 1L
 
@@ -77,7 +77,7 @@ class TagControllerSpec extends Specification {
         response.json.name == "sample"
     }
 
-    void "update should respond with updated tag"() {
+    void "updateTag should respond with updated tag"() {
         given:
         Long idToFind = 1L
         String nameToUpdate = "sample"
@@ -97,7 +97,7 @@ class TagControllerSpec extends Specification {
         response.json.name == "sample"
     }
 
-    void "delete should delete tag by id"() {
+    void "deleteTag should delete tag by id"() {
         given:
         Long idToFind = 1L
 
