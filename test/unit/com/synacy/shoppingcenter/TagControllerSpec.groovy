@@ -26,7 +26,7 @@ class TagControllerSpec extends Specification {
         Tag tag2 = new Tag(name: "tag 2")
 
         when:
-        controller.index()
+        controller.fetchAllTags()
 
         then:
         1 * tagService.fetchAllTags() >> [tag1, tag2]
@@ -50,7 +50,7 @@ class TagControllerSpec extends Specification {
         Tag tag1 = new Tag(name: tagName)
 
         when:
-        controller.create()
+        controller.createTag()
 
         then:
         1 * tagService.createNewTag(tagName) >> tag1
@@ -67,7 +67,7 @@ class TagControllerSpec extends Specification {
         Tag tag = new Tag(id: idToFind, name: "sample")
 
         when:
-        controller.view(idToFind)
+        controller.viewTag(idToFind)
 
         then:
         1 * tagService.fetchTagById(idToFind) >> tag
@@ -87,7 +87,7 @@ class TagControllerSpec extends Specification {
         Tag tag = new Tag(name: nameToUpdate)
 
         when:
-        controller.update(idToFind)
+        controller.updateTag(idToFind)
 
         then:
         1 * tagService.updateTag(idToFind, nameToUpdate) >> tag
@@ -102,7 +102,7 @@ class TagControllerSpec extends Specification {
         Long idToFind = 1L
 
         when:
-        controller.delete(idToFind)
+        controller.deleteTag(idToFind)
 
         then:
         1 * tagService.deleteTagById(idToFind)

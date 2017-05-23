@@ -27,7 +27,6 @@ class ShopControllerSpec extends Specification {
         Integer max = null
         Long tagId = null
 
-
         Shop shop1 = new Shop(name: "shop 1", description: "shop 1 descripiton")
         Shop shop2 = new Shop(name: "shop 2", description: "shop 2 descripiton")
 

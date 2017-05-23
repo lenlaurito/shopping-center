@@ -10,6 +10,7 @@ class ShopController implements ErrorHandlingTrait {
     ShopService shopService
 
     def fetchAllShops() {
+
         Integer offset = params.offset ? Integer.parseInt(params.offset) : null
         Integer max = params.max ? Integer.parseInt(params.max) : null
         Long tagId = params.tagId ? Integer.parseInt(params.tagId)?.longValue() : null
@@ -25,11 +26,8 @@ class ShopController implements ErrorHandlingTrait {
     def createShop() {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
-        List<Long> tags = request.JSON.tags ?: null
-        List<Location> locations = request.JSON.locations?.each {
-            if (it)
-                Location.valueOfLocation(it)
-        } ?: null
+        def tags = request.JSON.tags ?: null
+        def locations = request.JSON.locations ?: null
 
         Shop createdShop = shopService.createShop(name, description, tags, locations)
 
@@ -46,11 +44,8 @@ class ShopController implements ErrorHandlingTrait {
     def updateShop(Long shopId) {
         String name = request.JSON.name ?: null
         String description = request.JSON.description ?: null
-        List<Long> tags = request.JSON.tags ?: null
-        List<Location> locations = request.JSON.locations?.each {
-            if (it)
-                Location.valueOfLocation(it)
-        } ?: null
+        def tags = request.JSON.tags ?: null
+        def locations = request.JSON.locations ?: null
 
         Shop updatedShop = shopService.updateShop(shopId, name, description, tags, locations)
 

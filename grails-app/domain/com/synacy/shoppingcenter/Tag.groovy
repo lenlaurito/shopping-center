@@ -6,6 +6,7 @@ class Tag {
 	String name
 
 	static constraints = {
+		name maxSize: 255
 	}
 
 	static mapping = {

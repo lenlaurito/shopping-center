@@ -1,42 +1,38 @@
 package com.synacy.shoppingcenter
 
 import org.springframework.http.HttpStatus
-import org.springframework.dao.DataIntegrityViolationException
 
 class TagController implements ErrorHandlingTrait {
 
     static responseFormats = ['json']
 
-    TagService tagService;
+    TagService tagService
 
-    def index() {
+    def fetchAllTags() {
         List<Tag> tags = tagService.fetchAllTags()
 
         respond(tags)
     }
 
-    def create() {
+    def createTag() {
         String name = request.JSON.name ?: null
 
         respond(tagService.createNewTag(name), [status: HttpStatus.CREATED])
     }
 
-    def view(Long tagId) {
+    def viewTag(Long tagId) {
         respond(tagService.fetchTagById(tagId))
     }
 
-    def update(Long tagId) {
+    def updateTag(Long tagId) {
         String name = request.JSON.name ?: null
 
         respond(tagService.updateTag(tagId, name))
     }
 
-    def delete(Long tagId) {
-        try {
-            tagService.deleteTagById(tagId)
-        } catch (DataIntegrityViolationException e) {
-            throw new InvalidRequestException("Referential integrity error. This tag is still being used by shops")
-        }
+    def deleteTag(Long tagId) {
+
+        tagService.deleteTagById(tagId)
 
         render(status: HttpStatus.NO_CONTENT)
     }
