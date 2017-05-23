@@ -1,10 +1,13 @@
-package com.synacy.shoppingcenter
+package com.synacy.shoppingcenter.shop
+
+import com.synacy.shoppingcenter.tag.Tag
 
 class Shop {
 
 	Long id
 	String name
 	String description
+	Location location
 
 	static constraints = {
 		description nullable: true
@@ -15,6 +18,7 @@ class Shop {
 	}
 
 	static hasMany = [
-			tags: Tag
+		tags: Tag
 	]
+	
 }
