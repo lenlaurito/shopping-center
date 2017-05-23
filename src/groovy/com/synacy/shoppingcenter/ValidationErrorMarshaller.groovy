@@ -17,7 +17,7 @@ class ValidationErrorMarshaller {
 
                         def msg = Holders.applicationContext.getBean("messageSource").getMessage(it, locale)
 
-                        return [ field: it.getField(), message: msg ]
+                        return msg
                     }
                 }
             ]
